@@ -11,7 +11,7 @@
 #' @export
 BinomialTree <- function(S, I, Time, r, sigma, n)
   { # A function implemented by Diethelm Wuertz
-
+  options(warn=-1)
     ### Note:
     # Calculates option prices from the Cox-Ross-Rubinstein Binomial tree model.
     #   The model described here is a version of the CRR Binomial Tree model.
@@ -48,8 +48,12 @@ BinomialTree <- function(S, I, Time, r, sigma, n)
     dy = 0.4
     cex = 1
     Tree_rounded = round(Tree, digits = 2)
-    depth = ncol(Tree_rounded)
-    plot(x = c(1,depth), y = c(-depth+1, depth-1), col = 0)
+    depth = ncol(Tree_rounded)-1
+    lablist<-as.vector(c(0:(depth-1)))
+    plot(x = c(1,depth), y = c(-depth, depth), col = 0, xlab = "Investment Horizon (Years)", ylab = "Up or Down", labels = FALSE)
+    axis(1, at=seq(1, n, by=1),labels = FALSE)
+    axis(2)
+    text(seq(1, n, by=1), par("usr")[3] - 0.2, labels = lablist, pos = 1, xpd = TRUE)
     points(x = 1, y = 0)
     text(1+dx, 0+dy, deparse(Tree_rounded[1, 1]), cex = cex)
     for (i in 1:(depth-1) ) {
@@ -195,8 +199,12 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, n, MC_loops)
   dy = 0.4
   cex = 1
   Tree_rounded = round(Tree, digits = 2)
-  depth = ncol(Tree_rounded)
-  plot(x = c(1,depth), y = c(-depth+1, depth-1), col = 0)
+  depth = ncol(Tree_rounded)-1
+  lablist<-as.vector(c(0:(depth-1)))
+  plot(x = c(1,depth), y = c(-depth, depth), col = 0, xlab = "Investment Horizon (Years)", ylab = "Up or Down", labels = FALSE)
+  axis(1, at=seq(1, n, by=1),labels = FALSE)
+  axis(2)
+  text(seq(1, n, by=1), par("usr")[3] - 0.2, labels = lablist, pos = 1, xpd = TRUE)
   points(x = 1, y = 0)
   text(1+dx, 0+dy, deparse(Tree_rounded[1, 1]), cex = cex)
   for (i in 1:(depth-1) ) {
