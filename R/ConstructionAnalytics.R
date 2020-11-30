@@ -265,10 +265,9 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, n, MC_loops)
     ggplot(Investment_Probability_Table, aes(x=as.array(X_axis), y=V1)) +
     geom_bar(stat="identity", colour="Navy") + xlab("Year") + ylab("Probability of Investment") +
     geom_text(aes(label=V1), position=position_dodge(width=0.9), vjust=-0.25)
-  ######Function Outputs######
-  #Printing Model Parameters
   param = c(S,Time,1+r,sigma,n-1,u,1/u,p,1-p)
   (Parameters <- structure(param,names=c("S","Time","Rf","sigma","n","Up","Down","Pi_Up","Pi_Down")))
+  ######Function Outputs######
   print("Model Parameters:")
   print(Parameters,digits=2)
   #State Variable Binomial Tree
@@ -280,8 +279,5 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, n, MC_loops)
   #Decision Tree
   print("Decision Tree:")
   print(DecisionTree[0:n,0:n])
-  #print(Sample_path)
-  #print(Decision_Path)
-  #print(Decision_Mat)
   print(Investment_Probability_Table)
   print(Invest.per.year.item)}
