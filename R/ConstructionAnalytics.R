@@ -10,10 +10,11 @@
 #' @examples BinomialTree(S=60, I=50,Time=1, r=.1,sigma=0.2,n=5)
 #' @export
 BinomialTree <- function(S, I, Time, r, sigma, n)
-  { # A function implemented by Diethelm Wuertz
+  {
   options(warn=-1)
     ### Note:
-    # Calculates option prices from the Cox-Ross-Rubinstein Binomial tree model.
+    # This is a revised function implemented by Diethelm Wuertz
+    # This function Calculates real option (e.g., assets, buildings,..) prices from the Cox-Ross-Rubinstein Binomial tree model.
     # The model described here is a version of the CRR Binomial Tree model.
     ### FUNCTION:
     # Parameters:
