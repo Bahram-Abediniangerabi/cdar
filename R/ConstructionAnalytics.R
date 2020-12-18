@@ -2,10 +2,10 @@
 #' @description This R function will provide real option prices for underlying assets (Infrastructure Projects, Buildings, etc) using binomial lattice.
 #' @param S State Variable
 #' @param I Investment
-#' @param Time Time Intervals within a Year
+#' @param dt Time Intervals within a Year
 #' @param r Rate of Return
 #' @param sigma Fluctuations in the Price of State Variable
-#' @param n Investment Horizon (yearly)
+#' @param Time Investment Horizon (yearly)
 #' @return NULL
 #' @examples BinomialTree(S=50, I=50, Time=5, r=0.2, sigma=0.4, dt=1)
 #' @export
@@ -132,10 +132,10 @@ BinomialTree <- function(S, I, Time, r, sigma, dt)
 #' @description This R function will provide real option prices and the probability of investment within the investment horizon using binomial lattice and monte carlo simulations.
 #' @param S State Variable
 #' @param I Investment
-#' @param Time Time Intervals within a Year
+#' @param dt Time Intervals within a Year
 #' @param r Rate of Return
 #' @param sigma Fluctuations in the Price of State Variable
-#' @param n Investment Horizon (yearly)
+#' @param Time Investment Horizon (yearly)
 #' @param MC_loops Number of Monte Carlo Simulations
 #' @return NULL
 #' @examples BinomialTree_MC(S=10, I=100, Time=10, r=.01, sigma=0.6, dt=1, MC_loops = 1000)
