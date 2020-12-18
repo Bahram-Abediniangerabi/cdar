@@ -4,7 +4,7 @@
 \alias{BinomialTree_MC}
 \title{Binomial Real Options Pricing with Monte Carlo Simulation}
 \usage{
-BinomialTree_MC(S, I, Time, r, sigma, n, MC_loops)
+BinomialTree_MC(S, I, Time, r, sigma, dt, MC_loops)
 }
 \arguments{
 \item{S}{State Variable}
@@ -17,9 +17,9 @@ BinomialTree_MC(S, I, Time, r, sigma, n, MC_loops)
 
 \item{sigma}{Fluctuations in the Price of State Variable}
 
-\item{n}{Investment Horizon (yearly)}
-
 \item{MC_loops}{Number of Monte Carlo Simulations}
+
+\item{n}{Investment Horizon (yearly)}
 }
 \description{
 This R function will provide real option prices and the probability of investment within the investment horizon using binomial lattice and monte carlo simulations.

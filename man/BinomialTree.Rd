@@ -4,7 +4,7 @@
 \alias{BinomialTree}
 \title{Real Options Pricing using Binomial Lattice}
 \usage{
-BinomialTree(S, I, Time, r, sigma, n)
+BinomialTree(S, I, Time, r, sigma, dt)
 }
 \arguments{
 \item{S}{State Variable}

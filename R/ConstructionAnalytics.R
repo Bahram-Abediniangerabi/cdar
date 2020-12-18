@@ -7,7 +7,7 @@
 #' @param sigma Fluctuations in the Price of State Variable
 #' @param n Investment Horizon (yearly)
 #' @return NULL
-#' @examples BinomialTree(S=60, I=50,Time=1, r=.1,sigma=0.2,n=5)
+#' @examples BinomialTree(S=50, I=50, Time=5, r=0.2, sigma=0.4, dt=1)
 #' @export
 BinomialTree <- function(S, I, Time, r, sigma, dt)
   {
@@ -138,12 +138,11 @@ BinomialTree <- function(S, I, Time, r, sigma, dt)
 #' @param n Investment Horizon (yearly)
 #' @param MC_loops Number of Monte Carlo Simulations
 #' @return NULL
-#' @examples BinomialTree_MC(S=70, I=100, Time=1, r=.05, sigma=0.3, n=10, MC_loops = 1000)
+#' @examples BinomialTree_MC(S=10, I=100, Time=10, r=.01, sigma=0.6, dt=1, MC_loops = 1000)
 #' @export
 BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)
   {
-  # Example:
-  # BinomialTree_MC(S=70, I=100, Time=1, r=.05, sigma=0.3, n=10, MC_loops = 1000)
+  options(warn=-1)
   # Parameters:
   n = (Time / dt)+1
   u  = exp(sigma*sqrt(dt))
