@@ -9,7 +9,7 @@
 #' @return NULL
 #' @examples BinomialTree(S=60, I=50,Time=1, r=.1,sigma=0.2,n=5)
 #' @export
-BinomialTree <- function(S, I, Time, r, sigma, n)
+BinomialTree <- function(S, I, Time, r, sigma, dt)
   {
   options(warn=-1)
     ### Note:
@@ -18,8 +18,7 @@ BinomialTree <- function(S, I, Time, r, sigma, n)
     # The model described here is a version of the CRR Binomial Tree model.
     ### FUNCTION:
     # Parameters:
-    n  = n+1
-    dt = Time / (n-1)
+    n = (Time / dt)+1
     u  = exp(sigma*sqrt(dt))
     d  = 1 / u
     k  = exp(r*dt)
@@ -141,13 +140,12 @@ BinomialTree <- function(S, I, Time, r, sigma, n)
 #' @return NULL
 #' @examples BinomialTree_MC(S=70, I=100, Time=1, r=.05, sigma=0.3, n=10, MC_loops = 1000)
 #' @export
-BinomialTree_MC <- function(S, I, Time, r, sigma, n, MC_loops)
+BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)
   {
   # Example:
   # BinomialTree_MC(S=70, I=100, Time=1, r=.05, sigma=0.3, n=10, MC_loops = 1000)
   # Parameters:
-  n  = n+1
-  dt = Time / (n-1)
+  n = (Time / dt)+1
   u  = exp(sigma*sqrt(dt))
   d  = 1 / u
   k  = exp(r*dt)
