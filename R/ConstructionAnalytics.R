@@ -12,11 +12,6 @@
 BinomialTree <- function(S, I, Time, r, sigma, dt)
   {
   options(warn=-1)
-    ### Note:
-    # This is a revised function implemented by Diethelm Wuertz
-    # This function Calculates real option (e.g., assets, buildings,..) prices from the Cox-Ross-Rubinstein Binomial tree model.
-    # The model described here is a version of the CRR Binomial Tree model.
-    ### FUNCTION:
     # Parameters:
     n = (Time / dt)+1
     u  = exp(sigma*sqrt(dt))
@@ -165,7 +160,7 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)
   Tree = matrix(rev(Tree), byrow = FALSE, ncol = n+1)
   colnames(Tree) <- paste(0:n, sep = "")
   rownames(Tree) <- paste( 0:n, sep = "")
-  # Tree Output:
+  # Tree Output
   # Binomial Lattice for State Variable:
   dx = -0.025
   dy = 0.4
