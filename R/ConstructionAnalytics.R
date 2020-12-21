@@ -123,6 +123,7 @@ BinomialTree <- function(S, I, Time, r, sigma, dt)
     print(Cashflow)
     print("Decision Tree:")
     print(DecisionTree[0:n,0:n])}
+
 #' @title Binomial Real Options Pricing with Monte Carlo Simulation
 #' @description This R function will provide real option prices and the probability of investment within the investment horizon using binomial lattice and monte carlo simulations.
 #' @param S State Variable
