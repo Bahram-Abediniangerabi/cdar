@@ -11,19 +11,19 @@ BinomialTree_MC(S, I, Time, r, sigma, dt, MC_loops)
 
 \item{I}{Investment}
 
-\item{Time}{Time Intervals within a Year}
+\item{Time}{Investment Horizon (yearly)}
 
 \item{r}{Rate of Return}
 
 \item{sigma}{Fluctuations in the Price of State Variable}
 
-\item{MC_loops}{Number of Monte Carlo Simulations}
+\item{dt}{Time Intervals within a Year}
 
-\item{n}{Investment Horizon (yearly)}
+\item{MC_loops}{Number of Monte Carlo Simulations}
 }
 \description{
 This R function will provide real option prices and the probability of investment within the investment horizon using binomial lattice and monte carlo simulations.
 }
 \examples{
-BinomialTree_MC(S=70, I=100, Time=1, r=.05, sigma=0.3, n=10, MC_loops = 1000)
+BinomialTree_MC(S=10, I=100, Time=10, r=.01, sigma=0.6, dt=1, MC_loops = 1000)
 }

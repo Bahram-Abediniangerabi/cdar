@@ -11,17 +11,17 @@ BinomialTree(S, I, Time, r, sigma, dt)
 
 \item{I}{Investment}
 
-\item{Time}{Time Intervals within a Year}
+\item{Time}{Investment Horizon (yearly)}
 
 \item{r}{Rate of Return}
 
 \item{sigma}{Fluctuations in the Price of State Variable}
 
-\item{n}{Investment Horizon (yearly)}
+\item{dt}{Time Intervals within a Year}
 }
 \description{
 This R function will provide real option prices for underlying assets (Infrastructure Projects, Buildings, etc) using binomial lattice.
 }
 \examples{
-BinomialTree(S=60, I=50,Time=1, r=.1,sigma=0.2,n=5)
+BinomialTree(S=50, I=50, Time=5, r=0.2, sigma=0.4, dt=1)
 }
