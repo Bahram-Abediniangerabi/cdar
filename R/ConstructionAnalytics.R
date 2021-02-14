@@ -97,20 +97,13 @@ BinomialTree <- function(S, I, Time, r, sigma, dt)
     }
     colnames(DecisionTree) <- paste("Year ", 0:n, sep = "")
     rownames(DecisionTree) <- paste( 0:n, sep = "")
-    Sample_path = rbinom(n,1,0.5)
-    Decision = c()
-    Decision_Path = vector()
-    x_position = 0
-    y_position = 0
-    for (i in Sample_path) {
-      if (i==1) {
-        x_position = x_position
-        y_position = y_position+1}
-      if (i==0) {
-        x_position = x_position+1
-        y_position = y_position+1}
-      Decision_Path=append(Decision_Path,DecisionTree[x_position,y_position])
-    }
+
+    #Least Value of S for Investment
+    col_Expected_Value = colMeans(Cashflow,dims = 1)
+    least_value=vector(length = (length(col_Expected_Value)-2))
+    for(i in 1:(n-1)){
+      least_value[i]=I-(col_Expected_Value[i]/(1+r))}
+
     ### Function Outputs
     # Printing Model Parameters
     param = c(S,Time,1+r,sigma,n-1,u,1/u,p,1-p)
@@ -122,7 +115,11 @@ BinomialTree <- function(S, I, Time, r, sigma, dt)
     print("Cashflow:")
     print(Cashflow)
     print("Decision Tree:")
-    print(DecisionTree[0:n,0:n])}
+    print(DecisionTree[0:n,0:n])
+    print(least_value)
+    plot(least_value, type="l",ylab="Minimum Value",xlab="Time")
+    lines(least_value, type="b", col="red", lwd=2, pch=19)
+    }
 
 #' @title Binomial Real Options Pricing with Monte Carlo Simulation
 #' @description This R function will provide real option prices and the probability of investment within the investment horizon using binomial lattice and monte carlo simulations.
