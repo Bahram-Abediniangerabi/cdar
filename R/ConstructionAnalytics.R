@@ -225,6 +225,13 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)
   }
   colnames(DecisionTree) <- paste("Year ", 0:n, sep = "")
   rownames(DecisionTree) <- paste( 0:n, sep = "")
+
+  #Least Value of S for Investment
+  col_Expected_Value = colMeans(Cashflow,dims = 1)
+  least_value=vector(length = (length(col_Expected_Value)-2))
+  for(i in 1:(n-1)){
+    least_value[i]=I-(col_Expected_Value[i]/(1+r))}
+
   Decision_Mat= matrix(0, 1, n-1)
   for (i in 0:MC_loops){
     Sample_path = rbinom(n-1,1,0.5)
@@ -273,5 +280,9 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)
   #Decision Tree
   print("Decision Tree:")
   print(DecisionTree[0:n,0:n])
-  print(Investment_Probability_Table)
-  print(Invest.per.year.item)}
+  #print(Investment_Probability_Table)
+  print(Invest.per.year.item)
+  plot(least_value, type="l",ylab="Minimum Value",xlab="Time")
+  lines(least_value, type="b", col="red", lwd=2, pch=19)
+  #axis(1, labels=V1)
+  }
