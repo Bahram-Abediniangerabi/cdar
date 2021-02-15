@@ -1,7 +1,7 @@
 Package: ConstructionAnalyticsR
 Type: Package
 Title: Construction Data Analytics
-Version: 0.2.1
+Version: 0.2.2
 Author: Bahram Abediniangerabi
 Maintainer: Bahram Abediniangerabi <abedini.bahram@gmail.com>
 Description: This R package will help researchers and practitioners in the area of construction engineering and management to conduct construction analytics including construction time series forecasting, construction project financing, and construction schedule optimization.
