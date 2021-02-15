@@ -281,5 +281,4 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)
   print(Invest.per.year.item)
   print(least_value)
   plot(least_value, type="l",ylab="Minimum Value",xlab="Time")
-  lines(least_value, type="b", col="red", lwd=2, pch=19)
-  }
+  lines(least_value, type="b", col="red", lwd=2, pch=19)}
