@@ -279,6 +279,7 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)
   print(DecisionTree[0:n,0:n])
   #print(Investment_Probability_Table)
   print(Invest.per.year.item)
+  print("State Variable Threshold for Investment:")
   print(least_value)
   plot(least_value, type="l",ylab="Minimum Value",xlab="Time")
   lines(least_value, type="b", col="red", lwd=2, pch=19)}
