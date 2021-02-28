@@ -19,6 +19,7 @@ BinomialTree <- function(S, I, Time, r, sigma, dt)
     k  = exp(r*dt)
     p  = (k - d) / (u - d)
     Df = exp(-r*dt)
+    q  = 1-p
     # Algorithm:
     OptionValue = (S*u^(0:n)*d^(n:0))
     offset = 1
@@ -34,6 +35,12 @@ BinomialTree <- function(S, I, Time, r, sigma, dt)
     Tree = matrix(rev(Tree), byrow = FALSE, ncol = n+1)
     colnames(Tree) <- paste(0:n, sep = "")
     rownames(Tree) <- paste( 0:n, sep = "")
+    # Probability matrix for the state variable :
+    probabilities = matrix(0, nrow=n, ncol=n)
+    for (i in 1:n){
+      for (j in 0:i){
+        probabilities[i, j] = p^j * q^(i-j)}}
+    probabilities= t(probabilities)
     # Binomial Lattice for State Variable:
     dx = -0.025
     dy = 0.4
@@ -99,7 +106,12 @@ BinomialTree <- function(S, I, Time, r, sigma, dt)
     rownames(DecisionTree) <- paste( 0:n, sep = "")
 
     #Least Value of S for Investment
-    col_Expected_Value = colMeans(Cashflow,dims = 1)
+    Cash_Prob_inner = Cashflow[1:(n-1)]%*%probabilities
+    for (i in 1:n){
+      weighted.mean(Cashflow[n-i], probabilities[n-1])
+    }
+    #col_Expected_Value = weighted.mean(Cashflow, probabilities, dims = 1)
+    col_Expected_Value = colMeans(Cashflow, dims = 1)
     least_value=vector(length = (length(col_Expected_Value)-2))
     for(i in 1:(n-1)){
       least_value[i]=I-(col_Expected_Value[i]/(1+r))}
