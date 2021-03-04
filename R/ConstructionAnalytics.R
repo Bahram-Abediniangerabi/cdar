@@ -35,12 +35,7 @@ BinomialTree <- function(S, I, Time, r, sigma, dt)
     Tree = matrix(rev(Tree), byrow = FALSE, ncol = n+1)
     colnames(Tree) <- paste(0:n, sep = "")
     rownames(Tree) <- paste( 0:n, sep = "")
-    # Probability matrix for the state variable :
-    probabilities = matrix(0, nrow=n, ncol=n)
-    for (i in 1:n){
-      for (j in 0:i){
-        probabilities[i, j] = p^j * q^(i-j)}}
-    probabilities= t(probabilities)
+
     # Binomial Lattice for State Variable:
     dx = -0.025
     dy = 0.4
@@ -105,17 +100,6 @@ BinomialTree <- function(S, I, Time, r, sigma, dt)
     colnames(DecisionTree) <- paste("Year ", 0:n, sep = "")
     rownames(DecisionTree) <- paste( 0:n, sep = "")
 
-    #Least Value of S for Investment
-    Cash_Prob_inner = Cashflow[1:(n-1)]%*%probabilities
-    for (i in 1:n){
-      weighted.mean(Cashflow[n-i], probabilities[n-1])
-    }
-    #col_Expected_Value = weighted.mean(Cashflow, probabilities, dims = 1)
-    col_Expected_Value = colMeans(Cashflow, dims = 1)
-    least_value=vector(length = (length(col_Expected_Value)-2))
-    for(i in 1:(n-1)){
-      least_value[i]=I-(col_Expected_Value[i]/(1+r))}
-
     ### Function Outputs
     # Printing Model Parameters
     param = c(S,Time,1+r,sigma,n-1,u,1/u,p,1-p)
@@ -128,9 +112,6 @@ BinomialTree <- function(S, I, Time, r, sigma, dt)
     print(Cashflow)
     print("Decision Tree:")
     print(DecisionTree[0:n,0:n])
-    print(least_value)
-    plot(least_value, type="l",ylab="Minimum Value",xlab="Time")
-    lines(least_value, type="b", col="red", lwd=2, pch=19)
     }
 
 #' @title Binomial Real Options Pricing with Monte Carlo Simulation
@@ -170,6 +151,7 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)
   Tree = matrix(rev(Tree), byrow = FALSE, ncol = n+1)
   colnames(Tree) <- paste(0:n, sep = "")
   rownames(Tree) <- paste( 0:n, sep = "")
+
   # Tree Output
   # Binomial Lattice for State Variable:
   dx = -0.025
@@ -235,12 +217,6 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)
   colnames(DecisionTree) <- paste("Year ", 0:n, sep = "")
   rownames(DecisionTree) <- paste( 0:n, sep = "")
 
-  #Least Value of S for Investment
-  col_Expected_Value = colMeans(Cashflow,dims = 1)
-  least_value=vector(length = (length(col_Expected_Value)-2))
-  for(i in 1:(n-1)){
-    least_value[i]=I-(col_Expected_Value[i]/(1+r))}
-
   Decision_Mat= matrix(0, 1, n-1)
   for (i in 0:MC_loops){
     Sample_path = rbinom(n-1,1,0.5)
@@ -277,6 +253,7 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)
     geom_text(aes(label=V1), position=position_dodge(width=0.9), vjust=-0.25)
   param = c(S,Time,1+r,sigma,n-1,u,1/u,p,1-p)
   (Parameters <- structure(param,names=c("S","Time","Rf","sigma","n","Up","Down","Pi_Up","Pi_Down")))
+
   ######Function Outputs######
   print("Model Parameters:")
   print(Parameters,digits=2)
@@ -291,7 +268,4 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)
   print(DecisionTree[0:n,0:n])
   #print(Investment_Probability_Table)
   print(Invest.per.year.item)
-  print("State Variable Threshold for Investment:")
-  print(least_value)
-  plot(least_value, type="l",ylab="Minimum Value",xlab="Time")
-  lines(least_value, type="b", col="red", lwd=2, pch=19)}
+  }
