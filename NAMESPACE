@@ -2,4 +2,4 @@
 
 export(BinomialTree)
 export(BinomialTree_MC)
-export(lcca_montecarlo)
+export(Lcca_MonteCarlo)
