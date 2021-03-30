@@ -10,11 +10,12 @@
 #' @param n Investment Horizon (yearly)
 #' @param n_loop Number of Monte Carlo Iterations
 #' @return NULL
-#' @examples Lcca_MonteCarlo(comp1 = rnorm(1000, mean=34, sd=8), comp2 = rnorm(1000, mean=10, sd=3), comp3 = rlnorm(1000, meanlog = 10, sdlog = 1), r =0.05, recurring_cost = 100,  n=10, n_loop = 100 )
+#' @examples Lcca_MonteCarlo(comp1 = rnorm(1000, mean=34, sd=8), comp2 = rnorm(1000, mean=10, sd=3),
+#' comp3 = rlnorm(1000, meanlog = 10, sdlog = 1), r =0.05, recurring_cost = 100,  n=10, n_loop = 100 )
 #' @export
 Lcca_MonteCarlo=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = NA, recurring_cost = NA, r, n, n_loop){
   all=list(comp1,comp2,comp3,comp4,comp5,recurring_cost,r,n_loop, n)
-  #Example:
+
   #nloop=10000
   #comp1 = rtriangle(n_loop, a =10, b = 200, c = 180)
   #comp2 = rnorm(n_loop, mean=10, sd=10)
@@ -291,7 +292,8 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)
     }
     Decision_Mat = rbind.data.frame(Decision_Path,Decision_Mat)
   }
-  require(plyr)
+
+  #require(plyr)
   Decision_Mat$Never <- apply(Decision_Mat, 1, function(x) length(which(x=="Wait")))
   #Counting loops with no Investment
   Full_Wait <- count(Decision_Mat$Never==(n-1))
@@ -302,7 +304,7 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)
   X_axis = paste("Year ", 1:n, sep = "")
   X_axis[n] = "Never"
   X_axis<-factor(X_axis, levels = X_axis)
-  require(ggplot2)
+  #require(ggplot2)
   Invest.per.year.item <-
     ggplot(Investment_Probability_Table, aes(x=as.array(X_axis), y=V1)) +
     geom_bar(stat="identity", colour="Navy") + xlab("Year") + ylab("Likelihood of Implementation") +
