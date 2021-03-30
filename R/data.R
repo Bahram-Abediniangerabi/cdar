@@ -30,7 +30,7 @@
 #' \describe{
 #'   \item{ihc}{Changes in the prices of highway construction costs over time}
 #' }
-#' @source \url{https://iowadot.gov/}
+#' @source \url{https://iowadot.gov/contracts/historical-completed-lettings/bid-tabs}
 "ihc"
 
 #' California Construction Cost Index (CCCI)

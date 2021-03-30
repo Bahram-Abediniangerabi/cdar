@@ -11,7 +11,7 @@ A vector with 48 datapoints.
 }
 }
 \source{
-\url{https://iowadot.gov/}
+\url{https://iowadot.gov/contracts/historical-completed-lettings/bid-tabs}
 }
 \usage{
 ihc

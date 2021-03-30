@@ -3,3 +3,7 @@
 export(BinomialTree)
 export(BinomialTree_MC)
 export(Lcca_MonteCarlo)
+importFrom("graphics", "axis", "hist", "lines", "par", "plot","points", "text")
+importFrom("stats", "density", "ecdf", "rbinom")
+importFrom("ggplot2", "aes", "geom_bar", "geom_text", "ggplot" , "position_dodge", "xlab" ,"ylab")
+importFrom("plyr",'ldply', "count")

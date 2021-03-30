@@ -292,8 +292,6 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)
     }
     Decision_Mat = rbind.data.frame(Decision_Path,Decision_Mat)
   }
-
-  #require(plyr)
   Decision_Mat$Never <- apply(Decision_Mat, 1, function(x) length(which(x=="Wait")))
   #Counting loops with no Investment
   Full_Wait <- count(Decision_Mat$Never==(n-1))
@@ -304,11 +302,11 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)
   X_axis = paste("Year ", 1:n, sep = "")
   X_axis[n] = "Never"
   X_axis<-factor(X_axis, levels = X_axis)
-  #require(ggplot2)
+  Label = Investment_Probability_Table[,2]
   Invest.per.year.item <-
-    ggplot(Investment_Probability_Table, aes(x=as.array(X_axis), y=V1)) +
+    ggplot(Investment_Probability_Table, aes(x=as.array(X_axis), y=Label)) +
     geom_bar(stat="identity", colour="Navy") + xlab("Year") + ylab("Likelihood of Implementation") +
-    geom_text(aes(label=V1), position=position_dodge(width=0.9), vjust=-0.25)
+    geom_text(aes(label=Label), position=position_dodge(width=0.9), vjust=-0.25)
   param = c(S,Time,1+r,sigma,n-1,u,1/u,p,1-p)
   (Parameters <- structure(param,names=c("S","Time","Rf","sigma","n","Up","Down","Pi_Up","Pi_Down")))
 
