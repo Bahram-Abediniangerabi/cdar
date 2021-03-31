@@ -30,7 +30,7 @@
 #' \describe{
 #'   \item{ihc}{Changes in the prices of highway construction costs over time}
 #' }
-#' @source \url{https://iowadot.gov/contracts/historical-completed-lettings/bid-tabs}
+#' @source \url{https://webcache.googleusercontent.com/search?q=cache:1CHdYegGlUIJ:https://www.iowadot.gov/contracts/lettings/PriceTrendIndex.pdf+&cd=1&hl=en&ct=clnk&gl=us}
 "ihc"
 
 #' California Construction Cost Index (CCCI)
@@ -41,7 +41,7 @@
 #' \describe{
 #'   \item{ccci}{Building Cost Index (BCI) average for San Francisco and Los Angeles, Index}
 #' }
-#' @source \url{https://www.dgs.ca.gov/RESD/Resources/Page-Content/Real-Estate-Services-Division-Resources-List-Folder/DGS-California-Construction-Cost-Index-CCCI}
+#' @source \url{https://www.dgs.ca.gov/RESD/Resources/Page-Content/Real-Estate-Services-Division-Resources-List-Folder/DGS-California-Construction-Cost-Index-CCCI#accordion-68cd4791-da8a-422f-b329-4aa358dec53c}
 "ccci"
 
 #' US Crude Oil Price (COP)

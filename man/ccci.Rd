@@ -11,7 +11,7 @@ A vector with 168 datapoints.
 }
 }
 \source{
-\url{https://www.dgs.ca.gov/RESD/Resources/Page-Content/Real-Estate-Services-Division-Resources-List-Folder/DGS-California-Construction-Cost-Index-CCCI}
+\url{https://www.dgs.ca.gov/RESD/Resources/Page-Content/Real-Estate-Services-Division-Resources-List-Folder/DGS-California-Construction-Cost-Index-CCCI#accordion-68cd4791-da8a-422f-b329-4aa358dec53c}
 }
 \usage{
 ccci
