@@ -11,7 +11,7 @@
 #' @param n_loop Number of Monte Carlo Iterations
 #' @return NULL
 #' @examples Lcca_MonteCarlo(comp1 = rnorm(1000, mean=34, sd=8), comp2 = rnorm(1000, mean=10, sd=3),
-#' comp3 = rlnorm(1000, meanlog = 10, sdlog = 1), r =0.05, recurring_cost = 100,  n=10, n_loop = 100 )
+#' comp3 = rlnorm(1000, meanlog = 10, sdlog = 1), r =0.05, recurring_cost = 100,  n=10, n_loop = 1000)
 #' @export
 Lcca_MonteCarlo=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = NA, recurring_cost = NA, r, n, n_loop){
   all=list(comp1,comp2,comp3,comp4,comp5,recurring_cost,r,n_loop, n)
@@ -20,7 +20,6 @@ Lcca_MonteCarlo=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = 
   #comp1 = rtriangle(n_loop, a =10, b = 200, c = 180)
   #comp2 = rnorm(n_loop, mean=10, sd=10)
   #comp3 = rlnorm(n_loop, meanlog = 10, sdlog = 1)
-  #comp3 = rnorm(n_loop, mean=100, sd=30)
   #comp4 = rnorm(n_loop, mean=100, sd=20)
   #comp5 = runif(n_loop, min = 100, max = 300)
   #lcca_montecarlo(comp1 = comp1, comp2 = comp2, comp3 = comp3, comp4 = comp4, comp5 = comp5,  r=0.05, n_loop=n_loop, n=50, recurring_cost = 100)

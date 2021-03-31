@@ -40,5 +40,5 @@ This R function will provide probabilistic LCCA for a projects with several unce
 }
 \examples{
 Lcca_MonteCarlo(comp1 = rnorm(1000, mean=34, sd=8), comp2 = rnorm(1000, mean=10, sd=3),
-comp3 = rlnorm(1000, meanlog = 10, sdlog = 1), r =0.05, recurring_cost = 100,  n=10, n_loop = 100 )
+comp3 = rlnorm(1000, meanlog = 10, sdlog = 1), r =0.05, recurring_cost = 100,  n=10, n_loop = 1000)
 }
