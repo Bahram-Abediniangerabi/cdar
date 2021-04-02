@@ -67,7 +67,6 @@ Lcca_MonteCarlo=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = 
 #' @export
 BinomialTree <- function(S, I, Time, r, sigma, dt)
   {
-  options(warn=-1)
     # Parameters:
     n = (Time / dt)+1
     u  = exp(sigma*sqrt(dt))
@@ -184,7 +183,6 @@ BinomialTree <- function(S, I, Time, r, sigma, dt)
 #' @export
 BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)
   {
-  options(warn=-1)
   # Parameters:
   n = (Time / dt)+1
   u  = exp(sigma*sqrt(dt))
