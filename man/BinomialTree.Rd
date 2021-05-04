@@ -19,6 +19,9 @@ BinomialTree(S, I, Time, r, sigma, dt)
 
 \item{dt}{Time Intervals within a Year}
 }
+\value{
+Returns a binomial tree for the state variable "S", cashflow matrix calculated from the binomial tree and the investment cost, decision matrix for investment for different situations through the investment horizon, and a binomial tree plot.
+}
 \description{
 This R function will provide real option prices for underlying assets (Infrastructure Projects, Buildings, etc) using binomial lattice.
 }

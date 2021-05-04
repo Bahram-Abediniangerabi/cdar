@@ -9,7 +9,7 @@
 #' @param r Rate of Return
 #' @param n Investment Horizon (yearly)
 #' @param n_loop Number of Monte Carlo Iterations
-#' @return NULL
+#' @return Returns the histogram plot of all recurring cost components (inputs) and histogram, kernel density, and cumulative density function plots of net present value and equivalent uniform value (outputs) for the project.
 #' @examples Lcca_MonteCarlo(comp1 = rnorm(1000, mean=34, sd=8), comp2 = rnorm(1000, mean=10, sd=3),
 #' comp3 = rlnorm(1000, meanlog = 10, sdlog = 1), r =0.05, recurring_cost = 100,  n=10, n_loop = 1000)
 #' @export
@@ -62,7 +62,7 @@ Lcca_MonteCarlo=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = 
 #' @param r Rate of Return
 #' @param sigma Fluctuations in the Price of State Variable
 #' @param Time Investment Horizon (yearly)
-#' @return NULL
+#' @return Returns a binomial tree for the state variable "S", cashflow matrix calculated from the binomial tree and the investment cost, decision matrix for investment for different situations through the investment horizon, and a binomial tree plot.
 #' @examples BinomialTree(S=50, I=50, Time=5, r=0.2, sigma=0.4, dt=1)
 #' @export
 BinomialTree <- function(S, I, Time, r, sigma, dt)
@@ -179,7 +179,7 @@ BinomialTree <- function(S, I, Time, r, sigma, dt)
 #' @param sigma Fluctuations in the Price of State Variable
 #' @param Time Investment Horizon (yearly)
 #' @param MC_loops Number of Monte Carlo Simulations
-#' @return NULL
+#' @return Returns a binomial tree for the state variable "S", cashflow matrix calculated from the binomial tree and the investment cost, decision matrix for investment for different situations through the investment horizon, a binomial tree plot, and the likelihood of implementation plot.
 #' @examples BinomialTree_MC(S=10, I=100, Time=10, r=.01, sigma=0.6, dt=1, MC_loops = 1000)
 #' @export
 BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)

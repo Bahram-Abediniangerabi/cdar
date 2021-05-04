@@ -21,6 +21,9 @@ BinomialTree_MC(S, I, Time, r, sigma, dt, MC_loops)
 
 \item{MC_loops}{Number of Monte Carlo Simulations}
 }
+\value{
+Returns a binomial tree for the state variable "S", cashflow matrix calculated from the binomial tree and the investment cost, decision matrix for investment for different situations through the investment horizon, a binomial tree plot, and the likelihood of implementation plot.
+}
 \description{
 This R function will provide real option prices and the probability of investment within the investment horizon using binomial lattice and monte carlo simulations.
 }

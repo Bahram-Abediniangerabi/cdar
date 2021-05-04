@@ -35,6 +35,9 @@ Lcca_MonteCarlo(
 
 \item{n_loop}{Number of Monte Carlo Iterations}
 }
+\value{
+Returns the histogram plot of all recurring cost components (inputs) and histogram, kernel density, and cumulative density function plots of net present value and equivalent uniform value (outputs) for the project.
+}
 \description{
 This R function will provide probabilistic LCCA for a projects with several uncertain initail cost components.
 }

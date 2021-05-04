@@ -1,10 +1,11 @@
-Package: ConstructionAnalyticsR
+Package: cdar
 Type: Package
-Title: ConstructionDataAnalytics
+Title: Construction Data Analytics with R
 Version: 0.0.1
-Author: Bahram Abediniangerabi
+Author@R: Bahram Abediniangerabi <abedini.bahram@gmail.com>
+Author: Graeme Guthrie(2009, ISBN:978-3642126635)
 Maintainer: Bahram Abediniangerabi <abedini.bahram@gmail.com>
-Description: Functions to support Investment Under Uncertainty including Real Options method proposed by Graeme Guthrie and Probabilistic Life Cycle Cost Analysis. Reference: Guthrie, G. A. (2009). Real options in theory and practice. Oxford University Press, USA.
+Description: Functions to support investment under uncertainty including real options method and stochastic life cycle cost analysis.
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
