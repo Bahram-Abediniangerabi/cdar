@@ -330,7 +330,7 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)
 #' @param cf_t0 Cashflows at time 0
 #' @param cf Cashflow vector
 #' @param dt Cashflow times
-#' @return Returns the Cashflow digramfor the given cashflow streams
+#' @return Returns the Cashflow digram for the given cashflow streams
 #' @examples cfd(cf_t0 = -1000, cf=c(200,200,1000), times = c(1,1,2))
 #' @export
 cfd=function(cf_t0, cf,times){
@@ -370,4 +370,40 @@ cfd=function(cf_t0, cf,times){
   text((max(x.t))/2,10,labels="Time Diagram",cex=1.2)
   legend(0,1,legend="Period",lty=0,bty="n")
   par(mgp=c(3,1,0))
+}
+
+#' @title Net Present Value
+#' @description This R function will calculate NPV for the given cashflow streams.
+#' @param cf_t0 Cashflows at time 0
+#' @param cf Cashflow vector
+#' @param times Cashflow times
+#' @return Returns the NPV for the given cashflow streams
+#' @examples NPV(cf_t0 = -1000 , cf = c(100,300)  , times = c(3,2)  , r = 0.05)
+#' @export
+NPV=function(cf_t0,cf,times,r){
+  all=list(cf_t0,cf,times,r)
+  #NULL
+  if(any(lapply(all,is.null)==T)) stop("Cannot input any variables as NULL.")
+  #Length
+  if(any(lapply(list(cf_t0,r),length) != 1)==T) stop("cf_t0 and r   must be of length 1.")
+  #Numeric
+  if(!is.vector(cf) | !is.numeric(cf)) stop("cf must be a numeric vector.")
+  if(!is.vector(times) | !is.numeric(times)) stop("times must be a numeric vector.")
+  if(!is.numeric(cf_t0) | !is.numeric(r)) stop("cf_t0 and r must be numeric.")
+  #NA
+  if(any(is.na(cf)) | any(is.na(times)) | any(is.na(c(cf_t0,r)))) stop("Cannot input NA for any variables.")
+  #Infinite
+  if(any(cf==Inf) | any(times==Inf) | cf_t0==Inf | r==Inf) stop("Cannot input infinite for any variables.")
+  #Positive
+  if(any(times<=0)) stop("Cannot have negative values in times.")
+  if(r<0) stop("r cannot be negative.")
+
+  if(length(cf)==0 | length(times)==0 ) stop("Not enough cash flow information.")
+  if(length(cf) != length(times)) stop("Amount of cash flows not equal to amount of time values.")
+
+  cf_t0=cf_t0
+  pv=sum(cf/(1+r)^times)
+  npv=pv+cf_t0
+
+  return(npv)
 }
