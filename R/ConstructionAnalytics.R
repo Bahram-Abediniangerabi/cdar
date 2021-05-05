@@ -329,7 +329,7 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)
 #' @description This R function will provide a cashflow diagram with the given cashflow streams and their times.
 #' @param cf_t0 Cashflows at time 0
 #' @param cf Cashflow vector
-#' @param dt Cashflow times
+#' @param times Cashflow times
 #' @return Returns the Cashflow digram for the given cashflow streams
 #' @examples cfd(cf_t0 = -1000, cf=c(200,200,1000), times = c(1,1,2))
 #' @export
@@ -407,3 +407,67 @@ NPV=function(cf_t0,cf,times,r){
 
   return(npv)
 }
+
+#' @title Time Value of Money
+#' @description This R function can calculate present value and future value the given information.
+#' @param pv present value
+#' @param fv future value
+#' @param n number of periods
+#' @param r nominal interest rate convertible ic times per period
+#' @param ic interest conversion frequency per period
+#' @return Returns the NPV or FV for the given information
+#' @examples tvm(pv=50, n=5, r=.04)
+#' @export
+tvm=function(pv=NA,fv=NA,n=NA,r=NA,ic=1) {
+  ###Example: TVM(pv=50,n=5,r=.04)
+  all=list(pv,fv,n,r,ic)
+  #NULL
+  if(any(lapply(all,is.null)==T)) stop("Cannot input any variables as NULL.")
+  #Length
+  if(any(lapply(all,length) != 1)==T) stop("All inputs must be of length 1.")
+  #Numeric
+  num2=list(pv,fv,n,r,ic)
+  na.num2=num2[which(lapply(num2,is.na)==F)]
+  if(any(lapply(na.num2,is.numeric)==F)) stop("pv, fv, n, r, and ic must be numeric.")
+  #NA
+  nalist=list(ic)
+  if(any(lapply(nalist,is.na)==T)) stop("Cannot input ic as NA.")
+
+  NA.Neg=array(c(pv,fv,n,r,ic))
+  NA.Neg.Str=c("pv","fv","n","r","ic")
+  app=apply(NA.Neg,1,is.na)
+  #Positive
+  na.s=which(app==F & NA.Neg<=0)
+  if(length(na.s)>0) {errs=paste(NA.Neg.Str[na.s],collapse=" & ")
+  stop(cat("Error: '",errs, "' must be positive real number(s).\n"))}
+  #Infinite
+  na.s2=which(app==F & NA.Neg==Inf)
+  if(length(na.s2)>0) {errs=paste(NA.Neg.Str[na.s2],collapse=" & ")
+  stop(cat("Error: '",errs, "' cannot be infinite.\n"))}
+
+  test=c(pv,fv,n,r)
+  if(length(test[which(is.na(test))])>=2) stop("Too many unknowns.")
+  if(length(test[which(is.na(test))])==0) stop("Must have one unknown.")
+  if(!is.na(fv) & pv>fv & !is.na(pv)) stop("PV cannot be greater than FV.")
+
+  nom1=NA
+  if(!is.na(r)) {int=(1+r/ic)^ic-1
+  if(ic!=1) nom1=r}
+
+  if(is.na(pv)){pv=fv/(1+int)^(n);solve="PV"}
+  if(is.na(fv)){fv=pv*(1+int)^(n);solve="FV"}
+  if(is.na(n)){n=log(fv/pv)/log(1+int);solve="n"}
+  if(is.na(r)){int=(fv/pv)^(1/n)-1;solve="r"
+  if(ic!=1) nom1=((1+int)^(1/ic)-1)*ic}
+
+  out=c(pv,fv,n,int,nom1)
+  m.out=matrix(out,nrow=length(out))
+  rownames(m.out)=c("PV","FV","Periods",
+                    "Eff Rate",paste("r^(",round(ic,2),")",sep=""))
+  na=apply(m.out, 1, function(x) all(is.na(x)))
+  m.out=as.matrix(m.out[!na,])
+  colnames(m.out)=c("TVM")
+  return(m.out)
+}
+
+
