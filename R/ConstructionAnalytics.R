@@ -377,6 +377,7 @@ cfd=function(cf_t0, cf,times){
 #' @param cf_t0 Cashflows at time 0
 #' @param cf Cashflow vector
 #' @param times Cashflow times
+#' @param r rate of return
 #' @return Returns the NPV for the given cashflow streams
 #' @examples NPV(cf_t0 = -1000 , cf = c(100,300)  , times = c(3,2)  , r = 0.05)
 #' @export
@@ -470,4 +471,157 @@ tvm=function(pv=NA,fv=NA,n=NA,r=NA,ic=1) {
   return(m.out)
 }
 
+#' @title Equalnet Uniform Value or Annuity
+#' @description This R function calculate annuity for the present value, future value, number of payments/periods, amount of the first payment, the payment increment amount per period, and/or the interest rate for an arithmetically growing annuity.
+#' @param pv present value
+#' @param fv future value
+#' @param n number of periods
+#' @param r nominal interest rate convertible ic times per period
+#' @param ic interest conversion frequency per period
+#' @param a amount of the first payment
+#' @param q payment increment amount per period
+#' @param pf Payment frequency - number of payments per year
+#' @param imm option for annuity immediate or annuity due, default is immediate (TRUE)
+#' @param plot option to display a time diagram of the payments
+#' @return Returns Annuity
+#' @examples euv(pv=1000, fv=NA, n=10, a=NA, q=0, r=.05, ic=1, pf=1, imm=FALSE)
+#' @export
+euv=function(pv=NA,fv=NA,n=NA,a=NA,q=NA,r=NA,ic=1,pf=1,imm=TRUE,plot=FALSE){
+
+  all=list(pv,fv,n,a,q,r,ic,pf,imm,plot)
+  #NULL
+  if(any(lapply(all,is.null)==T)) stop("Cannot input any variables as NULL.")
+  #Length
+  if(any(lapply(all,length) != 1)==T) stop("All inputs must be of length 1.")
+  #Numeric
+  num2=list(pv,fv,n,a,r,ic,pf,q)
+  na.num2=num2[which(lapply(num2,is.na)==F)]
+  if(any(lapply(na.num2,is.numeric)==F)) stop("pv, fv, n, a, q, r, ic, and pf must be numeric.")
+  #NA
+  nalist=list(ic,pf,imm,plot)
+  if(any(lapply(nalist,is.na)==T)) stop("Cannot input ic, pf, imm, and plot as NA.")
+  #Logical
+  stopifnot(is.logical(imm),is.logical(plot))
+
+  num=c(pv,fv,n,a,r,ic,pf)
+  NA.Neg=array(num)
+  NA.Neg.Str=c("pv","fv","n","a","r","ic","pf")
+  app=apply(NA.Neg,1,is.na)
+  #Positive
+  na.s=which(app==F & NA.Neg<=0)
+  if(length(na.s)>0) {errs=paste(NA.Neg.Str[na.s],collapse=" & ")
+  stop(cat("Error: '",errs, "' must be positive real number(s).\n"))}
+  #Infinite
+  na.s2=which(app==F & NA.Neg==Inf)
+  if(length(na.s2)>0) {errs=paste(NA.Neg.Str[na.s2],collapse=" & ")
+  stop(cat("Error: '",errs, "' cannot be infinite.\n"))}
+
+  test=c(n,r);t1=length(test[which(is.na(test))])
+  test2=c(pv,fv);t2=length(test2[which(is.na(test2))])
+  test3=c(a,q);t3=length(test3[which(is.na(test3))])
+  test4=c(n,r,a,q);t4=length(test4[which(is.na(test4))])
+  if(t2 == 0) stop("Cannot specify both pv and fv.")
+  if(t1 >= 2) stop("Too many unknowns.")
+  if(t3 >= 2) stop("Cannot have both a and q unknown")
+  if(t4==0 & t2==0) stop("No unknowns specified.")
+  if(t4==1 & t2==2) stop("Too many unknowns.")
+  if(t1==0 & t3==0 & t2==1) stop("one of n, a, q, or r must be unknown if either pv or fv is known.")
+
+  if(!is.na(n) & n !=round(n)) stop("n must be a positive integer")
+  if(!is.na(a) & !is.na(q) & a+q<=0) stop("q is too small.")
+  if(is.na(n)) sn=T else sn=F
+  if(!is.na(a) & !is.na(q) & !is.na(n) & a+q*(n-1)<0) stop("Payments become negative.")
+
+  nom1=NA;nom2=NA
+
+  if(is.na(r)){
+    if(imm==T) {
+      if(is.na(pv)) {r=round(Re(polyroot(c(-fv+a+q*(n-1),rev(seq(from=a,by=q,length.out=n-1)))))-1,8)
+      r=r[which(round((a*(1-(1+r)^-n)/r+q*((1-(1+r)^-n)/r-n*(1+r)^-n)/r)*(1+r)^n,0)==round(fv,0))]}
+      if(is.na(fv)) {r=round(1/Re(polyroot(c(-pv,(seq(from=a,by=q,length.out=n)))))-1,8)
+      r=r[which(round((a*(1-(1+r)^-n)/r+q*((1-(1+r)^-n)/r-n*(1+r)^-n)/r),2)==round(pv,2))]}
+    }
+    if(imm==F) {
+      if(is.na(pv)) {r=round(Re(polyroot(c(-fv,rev(seq(from=a,by=q,length.out=n)))))-1,8)
+      r=r[which(round((a*(1-(1+r)^-n)/r+q*((1-(1+r)^-n)/r-n*(1+r)^-n)/r)*(1+r)^(n+1),0)==round(fv,0))]}
+      if(is.na(fv)) {r=round(1/Re(polyroot(c(-pv+a,(seq(from=a+q,by=q,length.out=n-1)))))-1,8)
+      r=r[which(round((a*(1-(1+r)^-n)/r+q*((1-(1+r)^-n)/r-n*(1+r)^-n)/r)*(1+r),0)==round(pv,0))]}
+    }
+    if(length(r)>1) {if(any(r>0)) r=r[which(r>0)] else r=r[1];r=r[1]}
+    eff.r=(1+r)^pf-1
+    n.r=(1+eff.r)^(1/ic)-1
+    if(ic != 1) nom1=n.r*ic
+    if(pf != 1 & pf != ic) nom2=r*pf
+    r=n.r*ic
+  }
+
+  eff.r=(1+r/ic)^(ic)-1
+  int=(1+eff.r)^(1/pf)-1
+  if(imm==T) imm_r=1 else imm_r=1+int
+  if(ic !=1) nom1=((1+eff.r)^(1/ic)-1)*ic
+  if(pf != ic & pf !=1) nom2=((1+eff.r)^(1/pf)-1)*pf
+
+  if(is.na(a)){
+    if(is.na(fv)) a=(pv/imm_r-q*((1-(1+int)^-n)/int-n*(1+int)^-n)/int)/((1-(1+int)^-n)/int)
+    if(is.na(pv)) a=(fv/imm_r/(1+int)^n-q*((1-(1+int)^-n)/int-n*(1+int)^-n)/int)/((1-(1+int)^-n)/int)
+  }
+
+  if(is.na(q)){
+    if(is.na(fv)) q=(pv/imm_r-a*(1-(1+int)^-n)/int)/(((1-(1+int)^-n)/int-n*(1+int)^-n)/int)
+    if(is.na(pv)) q=(fv/imm_r/(1+int)^n-a*(1-(1+int)^-n)/int)/(((1-(1+int)^-n)/int-n*(1+int)^-n)/int)
+  }
+
+  if(is.na(n)){
+    if(is.na(pv)) h=fv else h=pv
+    for(g in 0:1000){
+      if(is.na(fv)) h=h-imm_r*(a+q*g)/(1+int)^g else h=h-(a+q*g)
+      if(h<=0) {g=g+1;break}
+    }
+    n=seq(from=g/4,to=3*g,by=.0001)
+    if(is.na(fv)) n=n[which(round(imm_r*(a*(1-(1+int)^-n)/int+q*((1-(1+int)^-n)/int-n*(1+int)^-n)/int),0)==round(pv,0))]
+    if(is.na(pv)) n=n[which(round(imm_r*(a*(1-(1+int)^-n)/int+q*((1-(1+int)^-n)/int-n*(1+int)^-n)/int)*(1+int)^n,1)==round(fv,1))]
+    n=median(n)
+  }
+
+  if(is.na(pv)) {
+    pv=(a*(1-(1+int)^-n)/int+q*((1-(1+int)^-n)/int-n*(1+int)^-n)/int)*imm_r}
+  if(is.na(fv)) {
+    fv=(a*(1-(1+int)^-n)/int+q*((1-(1+int)^-n)/int-n*(1+int)^-n)/int)*imm_r*(1+int)^n}
+
+  if(plot==T){
+    if(sn==F){
+      plot.new()
+      plot(0,0,type="n",axes=F,ann=F,xlim = c(0,ceiling(n)+1),ylim=c(0, 10))
+      axis(1,at=seq(0,ceiling(n)),labels=seq(0,ceiling(n)),line=-8)
+      if(imm==T){
+        text(seq(1,ceiling(n)),rep(5.5,ceiling(n)),labels=seq(round(a,2),by=round(q,2),length.out=ceiling(n)),cex=.75)
+      }
+      if(imm==F){
+        text(seq(0,ceiling(n)-1),rep(5.5,ceiling(n)),labels=seq(round(a,2),by=round(q,2),length.out=ceiling(n)),cex=.75)
+      }
+      if(pf != 1) axis(1,at=seq(0,ceiling(n),by=pf),labels=seq(0,ceiling(n),by=pf)/pf,line=-5,col="blue")
+      text(.05*n,7.2,labels=round(pv,2),cex=.85)
+      text(.05*n,7.7,labels="PV")
+      text(n-.05*n,7.2,labels=round(fv,2),cex=.85)
+      text(n-.05*n,7.7,labels="FV")
+      text(n/2,10,labels="Time Diagram",cex=1.2)
+      text(n/2,9.4,labels=if(q != 0) "Arithmetic Annuity" else "Level Annuity",cex=1)
+      text(n*.4,8.5,bquote("Eff Rate "== .(round(eff.r,4))),cex=.85)
+      if(pf != 1) text(n*.4,7.8,bquote( r^(.(pf))== .(round(int*pf,4))),cex=.85)
+      r.ic=((1+eff.r)^(1/ic)-1)*ic
+      if(ic != 1 & ic != pf) text(n*.4,7.1,bquote( r^(.(ic))== .(round(r.ic,4))),cex=.85)
+      if(pf==1) legend(0,1,legend="Years",lty=1,bty="n") else legend(0,1,legend=c("Periods","Years"),lty=1,col=c("black","blue"),bty="n",ncol=2)
+    } else warning("No time diagram is provided when solving for n.\n") }
+
+  if(pf==1) {years=n;n=NA} else years=n/pf
+  out=c(pv,fv,a,q,eff.r,nom1,nom2,n,years)
+  m.out=matrix(out,nrow=length(out))
+  rownames(m.out)=c("PV","FV","A","Q","Eff Rate",paste("r^(",round(ic,2),")",sep=""),
+                    paste("r^(",round(pf,2),")",sep=""),"Periods","Years")
+  na=apply(m.out, 1, function(x) all(is.na(x)))
+  m.out=as.matrix(m.out[!na,])
+  if(round(q,2)==0) m="Level Annuity" else m="Arithmetic Annuity"
+  colnames(m.out)=m
+  return(m.out)
+}
 
