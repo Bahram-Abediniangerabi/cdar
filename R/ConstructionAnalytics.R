@@ -323,4 +323,51 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)
   print(DecisionTree[0:n,0:n])
   #print(Investment_Probability_Table)
   print(Invest.per.year.item)
-  }
+}
+
+#' @title Cashflow Diagram
+#' @description This R function will provide a cashflow diagram with the given cashflow streams and their times.
+#' @param cf_t0 Cashflows at time 0
+#' @param cf Cashflow vector
+#' @param dt Cashflow times
+#' @return Returns the Cashflow digramfor the given cashflow streams
+#' @examples cfd(cf_t0 = -1000, cf=c(200,200,1000), times = c(1,1,2))
+#' @export
+cfd=function(cf_t0, cf,times){
+  all=list(cf_t0, cf,times)
+  #NULL
+  if(any(lapply(all,is.null)==T)) stop("Cannot input any variables as NULL.")
+  #Numeric
+  if(!is.vector(cf) | !is.numeric(cf)) stop("cf must be a numeric vector.")
+  if(!is.vector(times) | !is.numeric(times)) stop("times must be a numeric vector.")
+  #NA
+  if(any(is.na(cf)) | any(is.na(times))) stop("Cannot input any variables as NA.")
+  #Infinite
+  if(any(cf==Inf)) stop("Cannot have infinite in cf.")
+  if(any(times==Inf)) stop("Cannot have infinite in times.")
+  #Positive
+  if(any(times<0)) stop("Cannot have negative values in times.")
+  if(length(cf)==0 | length(times)==0 ) stop("Missing cf or times information.")
+  if(length(cf) != length(times)) stop("Number of payments not equal to number of period values.")
+
+  d=unique(times[which(duplicated(times)==T)])
+  if(length(d)>0){ cfd=rep(0,length(d))
+  for(r in 1:length(d)) cfd[r]=sum(cf[which(times==d[r])])}
+  p=rep(0,max(times))
+  p[times]=cf
+  if(length(d)>0) {for(r in 1:length(d)) p[d[r]]=cfd[r]}
+
+  x.pv=p[which(p!=0)]
+  if(length(x.pv)==0) x.pv=0
+  x.t=unique(times)[order(unique(times))]
+  plot(0,0,type="n",axes=F,ann=F,xlim = c(-1,max(x.t)+1),ylim=c(0, 10))
+  axis(1,at=c(0,x.t),labels=c(0,x.t),line=-5)
+  axis(1,at=0,labels=cf_t0,line=-7,tck=0)
+  par(mgp=c(3,2,0))
+  par(col.axis="blue")
+  par(col.axis="black")
+  text(x.t,rep(5.5,max(x.t)),labels=x.pv,cex=.85)
+  text((max(x.t))/2,10,labels="Time Diagram",cex=1.2)
+  legend(0,1,legend="Period",lty=0,bty="n")
+  par(mgp=c(3,1,0))
+}
