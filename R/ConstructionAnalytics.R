@@ -379,9 +379,9 @@ cfd=function(cf_t0, cf,times){
 #' @param times Cashflow times
 #' @param r rate of return
 #' @return Returns the NPV for the given cashflow streams
-#' @examples NPV(cf_t0 = -1000 , cf = c(100,300)  , times = c(3,2)  , r = 0.05)
+#' @examples npv(cf_t0 = -1000 , cf = c(100,300)  , times = c(3,2)  , r = 0.05)
 #' @export
-NPV=function(cf_t0,cf,times,r){
+npv=function(cf_t0,cf,times,r){
   all=list(cf_t0,cf,times,r)
   #NULL
   if(any(lapply(all,is.null)==T)) stop("Cannot input any variables as NULL.")
@@ -625,3 +625,400 @@ euv=function(pv=NA,fv=NA,n=NA,a=NA,q=NA,r=NA,ic=1,pf=1,imm=TRUE,plot=FALSE){
   return(m.out)
 }
 
+#' @title Net Present Value for multiple options
+#' @description This R function calculate NPV for up to 3 different options.
+#' @param project1 cashflow for project 1
+#' @param project2 cashflow for project 2
+#' @param project3 cashflow for project 3
+#' @param r nominal interest rate convertible ic times per period
+#' @param cf_t0 cashflow at time 0, True if projects' cashflows vector include initial cashflow or False vice versa.
+#' @return Returns NPV for multiple projects
+#' @examples npv_investment_assessment(project1 = c(-2000, -1250, 1000, 1000),project2 = c(-1000, 1000, 1000, 10), project3 = c(-1000, 1250, 100, 1000),r = 0.05,cf_t0 = TRUE)
+#' @export
+npv_investment_assessment=function(project1=NA, project2=NA,project3=NA,r,cf_t0){
+  options(warn=-1)
+  all=list(project1,project2,project3,r,cf_t0)
+  #NULLcheck
+  if(any(lapply(all,is.null)==T)) stop("Cannot input any variables as NULL.")
+  cf_df <- data.frame(
+    project1 = project1,
+    project2 = project2,
+    project3 = project3)
+
+  npv <- function(x, r, t0=cf_t0){
+    # calculates net present value (NPV) given cash flow and discount rate
+    #
+    # x - cash flows vector
+    # r - discount rate, in decimals
+    # t0 - cash flow starts in year 0
+    sum(dcf(x, r, t0))
+  }
+
+  dcf <- function(x, r, t0=cf_t0){
+    # calculates discounted cash flows (DCF) given cash flow and discount rate
+    #
+    # x - cash flows vector
+    # r - vector or discount rates, in decimals. Single values will be recycled
+    # t0 - cash flow starts in year 0, i.e. discount rate in first period is zero.
+    if(length(r)==1){
+      r <- rep(r, length(x))
+      if(t0==TRUE){r[1]<-0}
+    }
+    x/cumprod(1+r)
+  }
+
+  cf_df %>%
+    summarise_all(funs(NPV=npv), r=r, t0=cf_t0) %>%
+    gather(key=key, value = value) %>%
+    separate(key, into = c("Project", "Metric")) %>%
+    spread(key=Project, value=value) %>%
+    mutate(Metric=fct_relevel(Metric, "NPV"),
+           Metric=fct_recode(Metric,
+                             `Net Present Value (NPV), USD mln`="NPV",)) %>%
+    arrange(as.numeric(Metric))
+}
+
+#' @title Equalent Uniform Value for multiple options
+#' @description This R function calculate EUV for up to 3 different options.
+#' @param project1 cashflow for project 1
+#' @param project2 cashflow for project 2
+#' @param project3 cashflow for project 3
+#' @param r nominal interest rate convertible ic times per period
+#' @param cf_t0 cashflow at time 0, True if projects' cashflows vector include initial cashflow or False vice versa.
+#' @return Returns EUV for multiple projects
+#' @examples euv_investment_assessment(project1 = c(-2000, -1250, 1000, 1000),project2 = c(-1000, 1000, 1000, 10), project3 = c(-1000, 1250, 100, 1000),r = 0.05,cf_t0 = TRUE)
+#' @export
+euv_investment_assessment=function(project1=NA, project2=NA,project3=NA,r,cf_t0){
+  options(warn=-1)
+  all=list(project1,project2,project3,r,cf_t0)
+  #NULL Check
+  if(any(lapply(all,is.null)==T)) stop("Cannot input any variables as NULL.")
+  cf_df <- data.frame(
+    project1 = project1,
+    project2 = project2,
+    project3 = project3)
+  t = length(project1)
+  if (cf_t0 == FALSE){
+    t = t} else {t = t-1}
+  A_factor = ((r*(1+r)^t)/((1+r)^t-1))
+
+  npv <- function(x, r, t0=cf_t0){
+    # calculates net present value (NPV) given cash flow and discount rate
+    #
+    # x - cash flows vector
+    # r - discount rate, in decimals
+    # t0 - cash flow starts in year 0
+    sum(dcf(x, r, t0))
+  }
+
+  euv <- function(x, r, t0=cf_t0){
+    # calculates Equivalent Uniform Values (EUV) given cash flow and discount rate
+    #
+    # x - cash flows vector
+    # r - discount rate, in decimals
+    # t0 - cash flow starts in year 0
+    # t - the the number of periods
+
+    euv = sum(dcf(x, r, t0))*A_factor
+  }
+
+  dcf <- function(x, r, t0=cf_t0){
+    # calculates discounted cash flows (DCF) given cash flow and discount rate
+    #
+    # x - cash flows vector
+    # r - vector or discount rates, in decimals. Single values will be recycled
+    # t0 - cash flow starts in year 0, i.e. discount rate in first period is zero.
+    if(length(r)==1){
+      r <- rep(r, length(x))
+      if(t0==TRUE){r[1]<-0}
+    }
+    x/cumprod(1+r)
+  }
+
+  cf_df %>%
+    summarise_all(funs(EUV=euv), r=r, t0=cf_t0) %>%
+    gather(key=key, value = value) %>%
+    separate(key, into = c("Project", "Metric")) %>%
+    spread(key=Project, value=value) %>%
+    mutate(Metric=fct_relevel(Metric,"EUV")) %>%
+    arrange(as.numeric(Metric))
+}
+
+#' @title Benefit Cost Ratio
+#' @description This R function calculates BCR for the given information.
+#' @param cif_t0 cash inflow at time 0
+#' @param cif cash inflow vector
+#' @param cif_times cash inflow time vector
+#' @param cof_t0 cash outflow at time 0
+#' @param cof cash outflow vector
+#' @param cof_times cash out flow time vector
+#' @param r nominal interest rate
+#' @return Returns BCR
+#' @examples benefit_cost_ratio(cif_t0 = 1000, cif = c(2000,3000,1000),cif_times = c(1,2,3),cof_t0 = -1000, cof = c(-100,-3000), cof_times = c(1,3), r= 0.1)
+#' @export
+benefit_cost_ratio <- function(cif_t0,cif,cif_times,cof_t0,cof,cof_times,r){
+  options(warn=-1)
+  all=list(cif_t0,cif,cif_times,r)
+  #NULL
+  if(any(lapply(all,is.null)==T)) stop("Cannot input any variables as NULL.")
+  #Length
+  if(any(lapply(list(cif_t0,r),length) != 1)==T) stop("cif_t0 and r must be of length 1.")
+  #Numeric
+  if(!is.vector(cif) | !is.numeric(cif)) stop("cif must be a numeric vector.")
+  if(!is.vector(cif_times) | !is.numeric(cif_times)) stop("cif_times must be a numeric vector.")
+  if(!is.numeric(cif_t0) | !is.numeric(r)) stop("cif_t0 and r must be numeric.")
+  #NA
+  if(any(is.na(cif)) | any(is.na(cif_times)) | any(is.na(c(cif_t0,r)))) stop("Cannot input NA for any variables.")
+  #Infinite
+  if(any(cif==Inf) | any(cif_times==Inf) | cif_t0==Inf | r==Inf) stop("Cannot input infinite for any variables.")
+  #Positive
+  if(any(cif_times<=0)) stop("Cannot have negative values in cif_times.")
+  if(r<0) stop("r cannot be negative.")
+
+  if(length(cif)==0 | length(cif_times)==0 ) stop("Not enough cash flow information.")
+  if(length(cif) != length(cif_times)) stop("Amount of cash flows not equal to amount of time values.")
+
+  cif_t0=abs(cif_t0)
+  pv_cif=sum(cif/(1+r)^cif_times)
+  npv_b=pv_cif+cif_t0
+
+  ################
+  all_o=list(cof_t0,cof,cof_times,r)
+  #NULL
+  if(any(lapply(all_o,is.null)==T)) stop("Cannot input any variables as NULL.")
+  #Length
+  if(any(lapply(list(cof_t0,r),length) != 1)==T) stop("cof_t0, and r must be of length 1.")
+  #Numeric
+  if(!is.vector(cof) | !is.numeric(cof)) stop("cif must be a numeric vector.")
+  if(!is.vector(cof_times) | !is.numeric(cof_times)) stop("cof_times must be a numeric vector.")
+  if(!is.numeric(cof_t0) | !is.numeric(r)) stop("cof_t0 and r must be numeric.")
+  #NA
+  if(any(is.na(cof)) | any(is.na(cof_times)) | any(is.na(c(cof_t0,r)))) stop("Cannot input NA for any variables.")
+  #Infinite
+  if(any(cof==Inf) | any(cof_times==Inf) | cof_t0==Inf | r==Inf) stop("Cannot input infinite for any variables.")
+  #Positive
+  if(any(cof_times<=0)) stop("Cannot have negative values in cof_times.")
+  if(r<0) stop("r cannot be negative.")
+
+  if(length(cof)==0 | length(cof_times)==0 ) stop("Not enough cash flow information.")
+  if(length(cof) != length(cof_times)) stop("Amount of cash flows not equal to amount of time values.")
+
+  pv_cof=sum(cof/(1+r)^cof_times)
+  npv_c=pv_cof+cof_t0
+
+  ################
+  return(abs(npv_b/npv_c))
+}
+
+#' @title Internal Rate of Return for multiple options
+#' @description This R function calculates IRR for up to 3 different options.
+#' @param project1 cashflow for project 1
+#' @param project2 cashflow for project 2
+#' @param project3 cashflow for project 3
+#' @param cf_t0 cashflow at time 0, True if projects' cashflows vector include initial cashflow or False vice versa.
+#' @return Returns IRR for multiple projects
+#' @examples irr_investment_assessment(project1 = c(-2000, -1250, 1000, 1000, 2000, 2000),project2 = c(-1000, 1000, 1000, 10, 200, 2000), project3 = c(-1000, 1250, 100, 1000, 2000, 20),cf_t0 = TRUE)
+#' @export
+irr_investment_assessment=function(project1=NA, project2=NA,project3=NA,cf_t0){
+  options(warn=-1)
+  all=list(project1,project2,project3,cf_t0)
+  #NULL
+  if(any(lapply(all,is.null)==T)) stop("Cannot input any variables as NULL.")
+  cf_df <- data.frame(
+    project1 = project1,
+    project2 = project2,
+    project3 = project3)
+
+
+  irr <- function(x, t0=cf_t0, ...){
+    # calculates internal rate of return (IRR) given cash flow
+    #
+    # x - cash flows vector
+    # t0 - cash flow starts in year 0
+    tryCatch(uniroot(f=function(i){sum(dcf(x, i, t0))},
+                     interval=c(0,1))$root,
+             error=function(e) return(NA)
+    )
+  }
+
+  dcf <- function(x, r, t0=cf_t0){
+    # calculates discounted cash flows (DCF) given cash flow and discount rate
+    #
+    # x - cash flows vector
+    # r - vector or discount rates, in decimals. Single values will be recycled
+    # t0 - cash flow starts in year 0, i.e. discount rate in first period is zero.
+    if(length(r)==1){
+      r <- rep(r, length(x))
+      if(t0==TRUE){r[1]<-0}
+    }
+    x/cumprod(1+r)
+  }
+
+  cf_df %>%
+    summarise_all(funs(IRR=irr), t0=cf_t0) %>%
+    gather(key=key, value = value) %>%
+    separate(key, into = c("Project", "Metric")) %>%
+    spread(key=Project, value=value) %>%
+    mutate(Metric=fct_relevel(Metric,  "IRR"),
+           Metric=fct_recode(Metric,`Internal Rate of Return (IRR), %`="IRR")) %>%
+    arrange(as.numeric(Metric))
+}
+
+#' @title Discounted payback period for multiple options
+#' @description This R function calculates payback period for up to 3 different options.
+#' @param project1 cashflow for project 1
+#' @param project2 cashflow for project 2
+#' @param project3 cashflow for project 3
+#' @param cf_t0 cashflow at time 0, True if projects' cashflows vector include initial cashflow or False vice versa.
+#' @param r nominal interest rate
+#' @return Returns Discounted payback period for multiple projects
+#' @examples dpbp_investment_assessment(project1 = c(-2000, -1250, 1000, 1000, 2000, 2000),project2 = c(-1000, 1000, 1000, 10, 200, 2000), project3 = c(-1000, 1250, 100, 1000, 2000, 20),cf_t0 = TRUE, r = 0.1)
+#' @export
+dpbp_investment_assessment=function(project1=NA, project2=NA,project3=NA,r,cf_t0){
+  options(warn=-1)
+  all=list(project1,project2,project3,r,cf_t0)
+  #NULL
+  if(any(lapply(all,is.null)==T)) stop("Cannot input any variables as NULL.")
+  cf_df <- data.frame(
+    project1 = project1,
+    project2 = project2,
+    project3 = project3)
+
+  pbp <- function(x, ...){
+    # calculates payback period (PBP)
+    #
+    # x - cash flows vector
+    # ... - ignored
+    i <- match(1, sign(cumsum(x)))
+    i-2+(-cumsum(x)[i-1]/x[i])
+  }
+
+  dpbp <- function(x, r, t0=cf_t0){
+    # calculates discounted payback period (DPBP) given cash flow and discount rate
+    #
+    # x - cash flows vector
+    # r - discount rate, in decimals
+    # t0 - cash flow starts in year 0
+    pbp(dcf(x, r, t0))
+  }
+
+  dcf <- function(x, r, t0=cf_t0){
+    # calculates discounted cash flows (DCF) given cash flow and discount rate
+    #
+    # x - cash flows vector
+    # r - vector or discount rates, in decimals. Single values will be recycled
+    # t0 - cash flow starts in year 0, i.e. discount rate in first period is zero.
+    if(length(r)==1){
+      r <- rep(r, length(x))
+      if(t0==TRUE){r[1]<-0}
+    }
+    x/cumprod(1+r)
+  }
+  cf_df %>%
+    summarise_all(funs(DPBP=dpbp), r=r, t0=cf_t0) %>%
+    gather(key=key, value = value) %>%
+    separate(key, into = c("Project", "Metric")) %>%
+    spread(key=Project, value=value) %>%
+    mutate(Metric=fct_relevel(Metric,"DPBP"),
+           Metric=fct_recode(Metric,`Discounted Payback Period, years`="DPBP")) %>%
+    arrange(as.numeric(Metric))
+}
+
+#' @title Investment assessment for multiple options
+#' @description This R function calculates NPV, EUV, IRR, and payback period for up to 3 different options.
+#' @param project1 cashflow for project 1
+#' @param project2 cashflow for project 2
+#' @param project3 cashflow for project 3
+#' @param cf_t0 cashflow at time 0, True if projects' cashflows vector include initial cashflow or False vice versa.
+#' @param r nominal interest rate
+#' @return Returns NPV, EUV, IRR, and discounted payback period for multiple projects
+#' @examples investment_assessment(project1 = c(-2000, -1250, 1000, 1000, 2000, 2000),project2 = c(-1000, 1000, 1000, 10, 200, 2000), project3 = c(-1000, 1250, 100, 1000, 2000, 20),cf_t0 = TRUE, r = 0.1)
+#' @export
+investment_assessment=function(project1=NA, project2=NA,project3=NA,r,cf_t0){
+  options(warn=-1)
+  all=list(project1,project2,project3,r,cf_t0)
+  #NULL
+  if(any(lapply(all,is.null)==T)) stop("Cannot input any variables as NULL.")
+  cf_df <- data.frame(
+    project1 = project1,
+    project2 = project2,
+    project3 = project3)
+
+  dcf <- function(x, r, t0=cf_t0){
+    # calculates discounted cash flows (DCF) given cash flow and discount rate
+    #
+    # x - cash flows vector
+    # r - vector or discount rates, in decimals. Single values will be recycled
+    # t0 - cash flow starts in year 0, i.e. discount rate in first period is zero.
+    if(length(r)==1){
+      r <- rep(r, length(x))
+      if(t0==TRUE){r[1]<-0}
+    }
+    x/cumprod(1+r)
+  }
+
+  npv <- function(x, r, t0=cf_t0){
+    # calculates net present value (NPV) given cash flow and discount rate
+    #
+    # x - cash flows vector
+    # r - discount rate, in decimals
+    # t0 - cash flow starts in year 0
+    sum(dcf(x, r, t0))
+  }
+
+  pbp <- function(x, ...){
+    # calculates payback period (PBP)
+    #
+    # x - cash flows vector
+    # ... - ignored
+    i <- match(1, sign(cumsum(x)))
+    i-2+(-cumsum(x)[i-1]/x[i])
+  }
+
+  dpbp <- function(x, r, t0=cf_t0){
+    # calculates discounted payback period (DPBP) given cash flow and discount rate
+    #
+    # x - cash flows vector
+    # r - discount rate, in decimals
+    # t0 - cash flow starts in year 0
+    pbp(dcf(x, r, t0))
+  }
+
+  irr <- function(x, t0=cf_t0, ...){
+    # calculates internal rate of return (IRR) given cash flow
+    #
+    # x - cash flows vector
+    # t0 - cash flow starts in year 0
+    tryCatch(uniroot(f=function(i){sum(dcf(x, i, t0))},
+                     interval=c(0,1))$root,
+             error=function(e) return(NA)
+    )
+  }
+
+  euv <- function(x, r, t0=cf_t0){
+    # calculates Equivalent Uniform Values (EUV) given cash flow and discount rate
+    #
+    # x - cash flows vector
+    # r - discount rate, in decimals
+    # t0 - cash flow starts in year 0
+    # t - the the number of periods
+    t = length(project1)
+    if (cf_t0 == FALSE){
+      t = t} else {t = t-1}
+    A_factor = ((r*(1+r)^t)/((1+r)^t-1))
+    euv = sum(dcf(x, r, t0))*A_factor
+  }
+
+  cf_df %>%
+    summarise_all(funs(NPV=npv, DPBP=dpbp, IRR=irr, EUV=euv), r=r, t0=cf_t0) %>%
+    gather(key=key, value = value) %>%
+    separate(key, into = c("Project", "Metric")) %>%
+    spread(key=Project, value=value) %>%
+    mutate(Metric=fct_relevel(Metric, "NPV", "IRR", "DPBP", "EUV"),
+           Metric=fct_recode(Metric,
+                             `Net Present Value (NPV), USD mln`="NPV",
+                             `Internal Rate of Return (IRR), %`="IRR",
+                             `Discounted Payback Period, years`="DPBP",
+                             `Equivalent Uniform Value, mln`="EUV")) %>%
+    arrange(as.numeric(Metric))
+}
