@@ -1,7 +1,7 @@
 Package: cdar
 Type: Package
 Title: Construction Data Analytics with R
-Version: 0.0.1
+Version: 0.0.9
 Author@R: Bahram Abediniangerabi <abedini.bahram@gmail.com>
 Author: Graeme Guthrie(2009, ISBN:978-3642126635)
 Maintainer: Bahram Abediniangerabi <abedini.bahram@gmail.com>

@@ -10,18 +10,17 @@
 #' @param n Investment Horizon (yearly)
 #' @param n_loop Number of Monte Carlo Iterations
 #' @return Returns the histogram plot of all recurring cost components (inputs) and histogram, kernel density, and cumulative density function plots of net present value and equivalent uniform value (outputs) for the project.
-#' @examples Lcca_MonteCarlo(comp1 = rnorm(1000, mean=34, sd=8), comp2 = rnorm(1000, mean=10, sd=3),
-#' comp3 = rlnorm(1000, meanlog = 10, sdlog = 1), r =0.05, recurring_cost = 100,  n=10, n_loop = 1000)
+#' @examples Lcca_MonteCarlo(comp1 = rnorm(1000, mean=34, sd=8), comp2 = rnorm(1000, mean=10, sd=3),comp3 = rlnorm(1000, meanlog = 10, sdlog = 1), r =0.05, recurring_cost = 100,  n=10, n_loop = 1000)
 #' @export
 Lcca_MonteCarlo=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = NA, recurring_cost = NA, r, n, n_loop){
   all=list(comp1,comp2,comp3,comp4,comp5,recurring_cost,r,n_loop, n)
-
-  #n_loop=10000
-  #comp1 = rtriangle(n_loop, a =10, b = 200, c = 180)
-  #comp2 = rnorm(n_loop, mean=10, sd=10)
-  #comp3 = rlnorm(n_loop, meanlog = 10, sdlog = 1)
-  #comp4 = rnorm(n_loop, mean=100, sd=20)
-  #comp5 = runif(n_loop, min = 100, max = 300)
+  #Example
+  ##n_loop=10000
+  ##comp1 = rtriangle(n_loop, a =10, b = 200, c = 180)
+  ##comp2 = rnorm(n_loop, mean=10, sd=10)
+  ##comp3 = rlnorm(n_loop, meanlog = 10, sdlog = 1)
+  ##comp4 = rnorm(n_loop, mean=100, sd=20)
+  ##comp5 = runif(n_loop, min = 100, max = 300)
   #Lcca_MonteCarlo(comp1 = comp1, comp2 = comp2, comp3 = comp3, comp4 = comp4, comp5 = comp5,  r=0.05, n_loop=n_loop, n=50, recurring_cost = 100)
 
   #NULL
@@ -398,14 +397,12 @@ npv=function(cf_t0,cf,times,r){
   #Positive
   if(any(times<=0)) stop("Cannot have negative values in times.")
   if(r<0) stop("r cannot be negative.")
-
   if(length(cf)==0 | length(times)==0 ) stop("Not enough cash flow information.")
   if(length(cf) != length(times)) stop("Amount of cash flows not equal to amount of time values.")
 
   cf_t0=cf_t0
   pv=sum(cf/(1+r)^times)
   npv=pv+cf_t0
-
   return(npv)
 }
 
@@ -420,7 +417,6 @@ npv=function(cf_t0,cf,times,r){
 #' @examples tvm(pv=50, n=5, r=.04)
 #' @export
 tvm=function(pv=NA,fv=NA,n=NA,r=NA,ic=1) {
-  ###Example: TVM(pv=50,n=5,r=.04)
   all=list(pv,fv,n,r,ic)
   #NULL
   if(any(lapply(all,is.null)==T)) stop("Cannot input any variables as NULL.")
@@ -433,7 +429,6 @@ tvm=function(pv=NA,fv=NA,n=NA,r=NA,ic=1) {
   #NA
   nalist=list(ic)
   if(any(lapply(nalist,is.na)==T)) stop("Cannot input ic as NA.")
-
   NA.Neg=array(c(pv,fv,n,r,ic))
   NA.Neg.Str=c("pv","fv","n","r","ic")
   app=apply(NA.Neg,1,is.na)
@@ -703,31 +698,14 @@ euv_investment_assessment=function(project1=NA, project2=NA,project3=NA,r,cf_t0)
   A_factor = ((r*(1+r)^t)/((1+r)^t-1))
 
   npv <- function(x, r, t0=cf_t0){
-    # calculates net present value (NPV) given cash flow and discount rate
-    #
-    # x - cash flows vector
-    # r - discount rate, in decimals
-    # t0 - cash flow starts in year 0
     sum(dcf(x, r, t0))
   }
 
   euv <- function(x, r, t0=cf_t0){
-    # calculates Equivalent Uniform Values (EUV) given cash flow and discount rate
-    #
-    # x - cash flows vector
-    # r - discount rate, in decimals
-    # t0 - cash flow starts in year 0
-    # t - the the number of periods
-
     euv = sum(dcf(x, r, t0))*A_factor
   }
 
   dcf <- function(x, r, t0=cf_t0){
-    # calculates discounted cash flows (DCF) given cash flow and discount rate
-    #
-    # x - cash flows vector
-    # r - vector or discount rates, in decimals. Single values will be recycled
-    # t0 - cash flow starts in year 0, i.e. discount rate in first period is zero.
     if(length(r)==1){
       r <- rep(r, length(x))
       if(t0==TRUE){r[1]<-0}
@@ -829,12 +807,8 @@ irr_investment_assessment=function(project1=NA, project2=NA,project3=NA,cf_t0){
     project2 = project2,
     project3 = project3)
 
-
   irr <- function(x, t0=cf_t0, ...){
-    # calculates internal rate of return (IRR) given cash flow
-    #
-    # x - cash flows vector
-    # t0 - cash flow starts in year 0
+
     tryCatch(uniroot(f=function(i){sum(dcf(x, i, t0))},
                      interval=c(0,1))$root,
              error=function(e) return(NA)
@@ -842,11 +816,6 @@ irr_investment_assessment=function(project1=NA, project2=NA,project3=NA,cf_t0){
   }
 
   dcf <- function(x, r, t0=cf_t0){
-    # calculates discounted cash flows (DCF) given cash flow and discount rate
-    #
-    # x - cash flows vector
-    # r - vector or discount rates, in decimals. Single values will be recycled
-    # t0 - cash flow starts in year 0, i.e. discount rate in first period is zero.
     if(length(r)==1){
       r <- rep(r, length(x))
       if(t0==TRUE){r[1]<-0}
@@ -885,29 +854,15 @@ dpbp_investment_assessment=function(project1=NA, project2=NA,project3=NA,r,cf_t0
     project3 = project3)
 
   pbp <- function(x, ...){
-    # calculates payback period (PBP)
-    #
-    # x - cash flows vector
-    # ... - ignored
     i <- match(1, sign(cumsum(x)))
     i-2+(-cumsum(x)[i-1]/x[i])
   }
 
   dpbp <- function(x, r, t0=cf_t0){
-    # calculates discounted payback period (DPBP) given cash flow and discount rate
-    #
-    # x - cash flows vector
-    # r - discount rate, in decimals
-    # t0 - cash flow starts in year 0
     pbp(dcf(x, r, t0))
   }
 
   dcf <- function(x, r, t0=cf_t0){
-    # calculates discounted cash flows (DCF) given cash flow and discount rate
-    #
-    # x - cash flows vector
-    # r - vector or discount rates, in decimals. Single values will be recycled
-    # t0 - cash flow starts in year 0, i.e. discount rate in first period is zero.
     if(length(r)==1){
       r <- rep(r, length(x))
       if(t0==TRUE){r[1]<-0}
@@ -945,11 +900,6 @@ investment_assessment=function(project1=NA, project2=NA,project3=NA,r,cf_t0){
     project3 = project3)
 
   dcf <- function(x, r, t0=cf_t0){
-    # calculates discounted cash flows (DCF) given cash flow and discount rate
-    #
-    # x - cash flows vector
-    # r - vector or discount rates, in decimals. Single values will be recycled
-    # t0 - cash flow starts in year 0, i.e. discount rate in first period is zero.
     if(length(r)==1){
       r <- rep(r, length(x))
       if(t0==TRUE){r[1]<-0}
@@ -958,37 +908,19 @@ investment_assessment=function(project1=NA, project2=NA,project3=NA,r,cf_t0){
   }
 
   npv <- function(x, r, t0=cf_t0){
-    # calculates net present value (NPV) given cash flow and discount rate
-    #
-    # x - cash flows vector
-    # r - discount rate, in decimals
-    # t0 - cash flow starts in year 0
     sum(dcf(x, r, t0))
   }
 
   pbp <- function(x, ...){
-    # calculates payback period (PBP)
-    #
-    # x - cash flows vector
-    # ... - ignored
     i <- match(1, sign(cumsum(x)))
     i-2+(-cumsum(x)[i-1]/x[i])
   }
 
   dpbp <- function(x, r, t0=cf_t0){
-    # calculates discounted payback period (DPBP) given cash flow and discount rate
-    #
-    # x - cash flows vector
-    # r - discount rate, in decimals
-    # t0 - cash flow starts in year 0
     pbp(dcf(x, r, t0))
   }
 
   irr <- function(x, t0=cf_t0, ...){
-    # calculates internal rate of return (IRR) given cash flow
-    #
-    # x - cash flows vector
-    # t0 - cash flow starts in year 0
     tryCatch(uniroot(f=function(i){sum(dcf(x, i, t0))},
                      interval=c(0,1))$root,
              error=function(e) return(NA)
@@ -996,12 +928,6 @@ investment_assessment=function(project1=NA, project2=NA,project3=NA,r,cf_t0){
   }
 
   euv <- function(x, r, t0=cf_t0){
-    # calculates Equivalent Uniform Values (EUV) given cash flow and discount rate
-    #
-    # x - cash flows vector
-    # r - discount rate, in decimals
-    # t0 - cash flow starts in year 0
-    # t - the the number of periods
     t = length(project1)
     if (cf_t0 == FALSE){
       t = t} else {t = t-1}
