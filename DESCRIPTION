@@ -13,6 +13,6 @@ Imports:
   forcats,dplyr,keras, tseries, zoo, lmtest, urca, tsDyn,  plyr, ggplot2, forecast, astsa, quantmod, stats, xts, tidyr, FinancialMath, FinCal, LICORS, triangle, histogram
 RoxygenNote: 7.1.1 
 Depends: 
-    R (>= 2.10)
+    R (>= 2.10),forcats,dplyr,keras, tseries, zoo, lmtest, urca, tsDyn,  plyr, ggplot2, forecast, astsa, quantmod, stats, xts, tidyr, FinancialMath, FinCal, LICORS, triangle, histogram
     
     
