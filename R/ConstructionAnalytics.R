@@ -631,9 +631,9 @@ euv=function(pv=NA,fv=NA,n=NA,a=NA,q=NA,r=NA,ic=1,pf=1,imm=TRUE,plot=FALSE){
 #' @examples npv_investment_assessment(project1 = c(-2000, -1250, 1000, 1000),project2 = c(-1000, 1000, 1000, 10), project3 = c(-1000, 1250, 100, 1000),r = 0.05,cf_t0 = TRUE)
 #' @export
 npv_investment_assessment=function(project1=NA, project2=NA,project3=NA,r,cf_t0){
-  options(warn=-1)
+  key <- value <- Project <- Metric <- NULL
   all=list(project1,project2,project3,r,cf_t0)
-  #NULLcheck
+  #NULL
   if(any(lapply(all,is.null)==T)) stop("Cannot input any variables as NULL.")
   cf_df <- data.frame(
     project1 = project1,
@@ -684,7 +684,7 @@ npv_investment_assessment=function(project1=NA, project2=NA,project3=NA,r,cf_t0)
 #' @examples euv_investment_assessment(project1 = c(-2000, -1250, 1000, 1000),project2 = c(-1000, 1000, 1000, 10), project3 = c(-1000, 1250, 100, 1000),r = 0.05,cf_t0 = TRUE)
 #' @export
 euv_investment_assessment=function(project1=NA, project2=NA,project3=NA,r,cf_t0){
-  options(warn=-1)
+  key <- value <- Project <- Metric <- NULL
   all=list(project1,project2,project3,r,cf_t0)
   #NULL Check
   if(any(lapply(all,is.null)==T)) stop("Cannot input any variables as NULL.")
@@ -735,7 +735,7 @@ euv_investment_assessment=function(project1=NA, project2=NA,project3=NA,r,cf_t0)
 #' @examples benefit_cost_ratio(cif_t0 = 1000, cif = c(2000,3000,1000),cif_times = c(1,2,3),cof_t0 = -1000, cof = c(-100,-3000), cof_times = c(1,3), r= 0.1)
 #' @export
 benefit_cost_ratio <- function(cif_t0,cif,cif_times,cof_t0,cof,cof_times,r){
-  options(warn=-1)
+
   all=list(cif_t0,cif,cif_times,r)
   #NULL
   if(any(lapply(all,is.null)==T)) stop("Cannot input any variables as NULL.")
@@ -798,7 +798,7 @@ benefit_cost_ratio <- function(cif_t0,cif,cif_times,cof_t0,cof,cof_times,r){
 #' @examples irr_investment_assessment(project1 = c(-2000, -1250, 1000, 1000, 2000, 2000),project2 = c(-1000, 1000, 1000, 10, 200, 2000), project3 = c(-1000, 1250, 100, 1000, 2000, 20),cf_t0 = TRUE)
 #' @export
 irr_investment_assessment=function(project1=NA, project2=NA,project3=NA,cf_t0){
-  options(warn=-1)
+  key <- value <- Project <- Metric <- NULL
   all=list(project1,project2,project3,cf_t0)
   #NULL
   if(any(lapply(all,is.null)==T)) stop("Cannot input any variables as NULL.")
@@ -844,7 +844,7 @@ irr_investment_assessment=function(project1=NA, project2=NA,project3=NA,cf_t0){
 #' @examples dpbp_investment_assessment(project1 = c(-2000, -1250, 1000, 1000, 2000, 2000),project2 = c(-1000, 1000, 1000, 10, 200, 2000), project3 = c(-1000, 1250, 100, 1000, 2000, 20),cf_t0 = TRUE, r = 0.1)
 #' @export
 dpbp_investment_assessment=function(project1=NA, project2=NA,project3=NA,r,cf_t0){
-  options(warn=-1)
+  key <- value <- Project <- Metric <- NULL
   all=list(project1,project2,project3,r,cf_t0)
   #NULL
   if(any(lapply(all,is.null)==T)) stop("Cannot input any variables as NULL.")
@@ -890,7 +890,7 @@ dpbp_investment_assessment=function(project1=NA, project2=NA,project3=NA,r,cf_t0
 #' @examples investment_assessment(project1 = c(-2000, -1250, 1000, 1000, 2000, 2000),project2 = c(-1000, 1000, 1000, 10, 200, 2000), project3 = c(-1000, 1250, 100, 1000, 2000, 20),cf_t0 = TRUE, r = 0.1)
 #' @export
 investment_assessment=function(project1=NA, project2=NA,project3=NA,r,cf_t0){
-  options(warn=-1)
+  key <- value <- Project <- Metric <- NULL
   all=list(project1,project2,project3,r,cf_t0)
   #NULL
   if(any(lapply(all,is.null)==T)) stop("Cannot input any variables as NULL.")
