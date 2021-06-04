@@ -10,9 +10,9 @@
 #' @param n Investment Horizon (yearly)
 #' @param n_loop Number of Monte Carlo Iterations
 #' @return Returns the histogram plot of all recurring cost components (inputs) and histogram, kernel density, and cumulative density function plots of net present value and equivalent uniform value (outputs) for the project.
-#' @examples Lcca_MonteCarlo(comp1 = rnorm(1000, mean=34, sd=8), comp2 = rnorm(1000, mean=10, sd=3),comp3 = rlnorm(1000, meanlog = 10, sdlog = 1), r =0.05, recurring_cost = 100,  n=10, n_loop = 1000)
+#' @examples LCCA_MC(comp1 = rnorm(10, mean=3, sd=1), r =0.05, recurring_cost = 10,  n=10, n_loop = 10)
 #' @export
-Lcca_MonteCarlo=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = NA, recurring_cost = NA, r, n, n_loop){
+LCCA_MC=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = NA, recurring_cost = NA, r, n, n_loop){
   all=list(comp1,comp2,comp3,comp4,comp5,recurring_cost,r,n_loop, n)
   #Example
   ##n_loop=10000
@@ -21,7 +21,7 @@ Lcca_MonteCarlo=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = 
   ##comp3 = rlnorm(n_loop, meanlog = 10, sdlog = 1)
   ##comp4 = rnorm(n_loop, mean=100, sd=20)
   ##comp5 = runif(n_loop, min = 100, max = 300)
-  #Lcca_MonteCarlo(comp1 = comp1, comp2 = comp2, comp3 = comp3, comp4 = comp4, comp5 = comp5,  r=0.05, n_loop=n_loop, n=50, recurring_cost = 100)
+  #LCCA_MC(comp1 = comp1, comp2 = comp2, comp3 = comp3, comp4 = comp4, comp5 = comp5,  r=0.05, n_loop=n_loop, n=50, recurring_cost = 100)
 
   #NULL
   if(any(lapply(all,is.null)==T)) stop("Cannot input any variables as NULL.")
@@ -628,9 +628,9 @@ euv=function(pv=NA,fv=NA,n=NA,a=NA,q=NA,r=NA,ic=1,pf=1,imm=TRUE,plot=FALSE){
 #' @param r nominal interest rate convertible ic times per period
 #' @param cf_t0 cashflow at time 0, True if projects' cashflows vector include initial cashflow or False vice versa.
 #' @return Returns NPV for multiple projects
-#' @examples npv_investment_assessment(project1 = c(-2000, -1250, 1000, 1000),project2 = c(-1000, 1000, 1000, 10), project3 = c(-1000, 1250, 100, 1000),r = 0.05,cf_t0 = TRUE)
+#' @examples npv_ia(project1 = c(-20, 9),project2 = c(-10, 10), project3 = c(-10, 9),r = 0.05,cf_t0 = TRUE)
 #' @export
-npv_investment_assessment=function(project1=NA, project2=NA,project3=NA,r,cf_t0){
+npv_ia=function(project1=NA, project2=NA,project3=NA,r,cf_t0){
   key <- value <- Project <- Metric <- NULL
   all=list(project1,project2,project3,r,cf_t0)
   #NULL
@@ -681,9 +681,9 @@ npv_investment_assessment=function(project1=NA, project2=NA,project3=NA,r,cf_t0)
 #' @param r nominal interest rate convertible ic times per period
 #' @param cf_t0 cashflow at time 0, True if projects' cashflows vector include initial cashflow or False vice versa.
 #' @return Returns EUV for multiple projects
-#' @examples euv_investment_assessment(project1 = c(-2000, -1250, 1000, 1000),project2 = c(-1000, 1000, 1000, 10), project3 = c(-1000, 1250, 100, 1000),r = 0.05,cf_t0 = TRUE)
+#' @examples euv_ia(project1 = c(-20, -9),project2 = c(-10, 10), project3 = c(-10, 9),r = 0.05,cf_t0 = TRUE)
 #' @export
-euv_investment_assessment=function(project1=NA, project2=NA,project3=NA,r,cf_t0){
+euv_ia=function(project1=NA, project2=NA,project3=NA,r,cf_t0){
   key <- value <- Project <- Metric <- NULL
   all=list(project1,project2,project3,r,cf_t0)
   #NULL Check
@@ -732,9 +732,9 @@ euv_investment_assessment=function(project1=NA, project2=NA,project3=NA,r,cf_t0)
 #' @param cof_times cash out flow time vector
 #' @param r nominal interest rate
 #' @return Returns BCR
-#' @examples benefit_cost_ratio(cif_t0 = 1000, cif = c(2000,3000,1000),cif_times = c(1,2,3),cof_t0 = -1000, cof = c(-100,-3000), cof_times = c(1,3), r= 0.1)
+#' @examples bc_ratio(cif_t0 = 10, cif = 9,cif_times = 2,cof_t0 = -10, cof = -5, cof_times = 2, r= 0.1)
 #' @export
-benefit_cost_ratio <- function(cif_t0,cif,cif_times,cof_t0,cof,cof_times,r){
+bc_ratio <- function(cif_t0,cif,cif_times,cof_t0,cof,cof_times,r){
 
   all=list(cif_t0,cif,cif_times,r)
   #NULL
@@ -795,9 +795,9 @@ benefit_cost_ratio <- function(cif_t0,cif,cif_times,cof_t0,cof,cof_times,r){
 #' @param project3 cashflow for project 3
 #' @param cf_t0 cashflow at time 0, True if projects' cashflows vector include initial cashflow or False vice versa.
 #' @return Returns IRR for multiple projects
-#' @examples irr_investment_assessment(project1 = c(-2000, -1250, 1000, 1000, 2000, 2000),project2 = c(-1000, 1000, 1000, 10, 200, 2000), project3 = c(-1000, 1250, 100, 1000, 2000, 20),cf_t0 = TRUE)
+#' @examples irr_ia(project1 = c(-20, 9),project2 = c(-10, 10), project3 = c(-10, 9),cf_t0 = TRUE)
 #' @export
-irr_investment_assessment=function(project1=NA, project2=NA,project3=NA,cf_t0){
+irr_ia=function(project1=NA, project2=NA,project3=NA,cf_t0){
   key <- value <- Project <- Metric <- NULL
   all=list(project1,project2,project3,cf_t0)
   #NULL
@@ -841,9 +841,9 @@ irr_investment_assessment=function(project1=NA, project2=NA,project3=NA,cf_t0){
 #' @param cf_t0 cashflow at time 0, True if projects' cashflows vector include initial cashflow or False vice versa.
 #' @param r nominal interest rate
 #' @return Returns Discounted payback period for multiple projects
-#' @examples dpbp_investment_assessment(project1 = c(-2000, -1250, 1000, 1000, 2000, 2000),project2 = c(-1000, 1000, 1000, 10, 200, 2000), project3 = c(-1000, 1250, 100, 1000, 2000, 20),cf_t0 = TRUE, r = 0.1)
+#' @examples dpbp_ia(project1 = c(-20, 9),project2 = c(-10, 10), project3 = c(-10, 9),cf_t0 = TRUE, r = 0.1)
 #' @export
-dpbp_investment_assessment=function(project1=NA, project2=NA,project3=NA,r,cf_t0){
+dpbp_ia=function(project1=NA, project2=NA,project3=NA,r,cf_t0){
   key <- value <- Project <- Metric <- NULL
   all=list(project1,project2,project3,r,cf_t0)
   #NULL
@@ -887,9 +887,9 @@ dpbp_investment_assessment=function(project1=NA, project2=NA,project3=NA,r,cf_t0
 #' @param cf_t0 cashflow at time 0, True if projects' cashflows vector include initial cashflow or False vice versa.
 #' @param r nominal interest rate
 #' @return Returns NPV, EUV, IRR, and discounted payback period for multiple projects
-#' @examples investment_assessment(project1 = c(-2000, -1250, 1000, 1000, 2000, 2000),project2 = c(-1000, 1000, 1000, 10, 200, 2000), project3 = c(-1000, 1250, 100, 1000, 2000, 20),cf_t0 = TRUE, r = 0.1)
+#' @examples ia(project1 = c(-20, 9),project2 = c(-10, 10), project3 = c(-10, 9),cf_t0 = TRUE, r = 0.1)
 #' @export
-investment_assessment=function(project1=NA, project2=NA,project3=NA,r,cf_t0){
+ia=function(project1=NA, project2=NA,project3=NA,r,cf_t0){
   key <- value <- Project <- Metric <- NULL
   all=list(project1,project2,project3,r,cf_t0)
   #NULL
