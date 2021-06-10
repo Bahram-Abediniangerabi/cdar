@@ -14,7 +14,7 @@
 #' @export
 LCCA_MC=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = NA, recurring_cost = NA, r, n, n_loop){
   all=list(comp1,comp2,comp3,comp4,comp5,recurring_cost,r,n_loop, n)
-  #Example
+  ####Example
   ##n_loop=10000
   ##comp1 = rtriangle(n_loop, a =10, b = 200, c = 180)
   ##comp2 = rnorm(n_loop, mean=10, sd=10)
@@ -33,7 +33,7 @@ LCCA_MC=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = NA, recu
   if (missing(recurring_cost)){recurring_cost_list = rep(0, length.out=n)} else {
     recurring_cost_list = rep(recurring_cost*(((1+r)^n)-1)/(r*(1+r)^n), length.out = n)}
 
-  npv_total_cost =  comp1 + comp2 + comp3 + comp4 + comp5 + recurring_cost_list
+  npv_total_cost = comp1 + comp2 + comp3 + comp4 + comp5 + recurring_cost_list
   euv_total_cost = npv_total_cost*(r*(1+r)^n)/(((1+r)^n)-1)
 
   #print(npv_recurring_cost)
@@ -51,7 +51,9 @@ LCCA_MC=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = NA, recu
   hist(euv_total_cost, col = "Gray",xlab="Equivalent Uniform Values", main="Histogram of Equivalent Uniform Values")
   plot(density(euv_total_cost),main="Kernel Density of Equivalent Uniform Values",col="blue")
   plot(ecdf(euv_total_cost),main="Cumulative Density Function of Equivalent Uniform Values",xlab="Equivalent Uniform Values",col="blue")
-}
+  print(npv_total_cost)
+  print(euv_total_cost)
+  }
 
 #' @title Real Options Pricing using Binomial Lattice
 #' @description This R function will provide real option prices for underlying assets (Infrastructure Projects, Buildings, etc) using binomial lattice.
