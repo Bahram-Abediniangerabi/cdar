@@ -1,6 +1,7 @@
 export(BinomialTree)
 export(BinomialTree_MC)
 export(LCCA_MC)
+export(EUAC_MC)
 export(npv)
 export(euv)
 export(cfd)
