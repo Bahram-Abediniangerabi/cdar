@@ -180,12 +180,30 @@ BinomialTree <- function(S, I, Time, r, sigma, dt)
     }
     colnames(Cashflow) <- paste(0:n, sep = "")
     rownames(Cashflow) <- paste( 0:n, sep = "")
-    Cashflow = round(Cashflow, digits = 2)
+
+    # Option Value Matrix
+    Option_Value=matrix(0, nrow = n+1, ncol = n+1)
+    for(i in n:1){
+      for(j in n:1){
+        Option_Value[i,j]=max(-I+Tree[i,j]+((p*Cashflow[i,j+1])+((1-p)*Cashflow[i+1,j+1]))/(1+r),((p*Cashflow[i,j+1])+((1-p)*Cashflow[i+1,j+1]))/(1+r))
+      }}
+    # Triangle(Cashflow)
+    for(i in 0:n+1){
+      for(j in 0:n+1){
+        if(i>j){Option_Value[i,j]=0
+        }else{
+          Option_Value[i,j]=Option_Value[i,j]
+        }
+      }
+    }
+    colnames(Option_Value) <- paste(0:n, sep = "")
+    rownames(Option_Value) <- paste( 0:n, sep = "")
+
     # DecisionTree Matrix
-    DecisionTree = as.data.frame(Cashflow)
+    DecisionTree = as.data.frame(Option_Value)
     for(i in 1:n){
       for(j in 1:n){
-        if(DecisionTree[i,j] > 0){
+        if(DecisionTree[i,j] == Cashflow[i,j]){
           DecisionTree[i,j]='Invest'
         } else {
           DecisionTree[i,j]='Wait'
@@ -214,6 +232,8 @@ BinomialTree <- function(S, I, Time, r, sigma, dt)
     print(Tree_rounded,digits=2)
     print("Cashflow:")
     print(Cashflow)
+    print("Option Value:")
+    print(Option_Value)
     print("Decision Tree:")
     print(DecisionTree[0:n,0:n])
     }
@@ -297,12 +317,30 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)
   }
   colnames(Cashflow) <- paste(0:n, sep = "")
   rownames(Cashflow) <- paste( 0:n, sep = "")
-  Cashflow = round(Cashflow, digits = 2)
+
+  # Option Value Matrix
+  Option_Value=matrix(0, nrow = n+1, ncol = n+1)
+  for(i in n:1){
+    for(j in n:1){
+      Option_Value[i,j]=max(-I+Tree[i,j]+((p*Cashflow[i,j+1])+((1-p)*Cashflow[i+1,j+1]))/(1+r),((p*Cashflow[i,j+1])+((1-p)*Cashflow[i+1,j+1]))/(1+r))
+    }}
+  # Triangle(Cashflow)
+  for(i in 0:n+1){
+    for(j in 0:n+1){
+      if(i>j){Option_Value[i,j]=0
+      }else{
+        Option_Value[i,j]=Option_Value[i,j]
+      }
+    }
+  }
+  colnames(Option_Value) <- paste(0:n, sep = "")
+  rownames(Option_Value) <- paste( 0:n, sep = "")
+
   #DecisionTree Matrix
-  DecisionTree = as.data.frame(Cashflow)
+  DecisionTree = as.data.frame(Option_Value)
   for(i in 1:n){
     for(j in 1:n){
-      if(DecisionTree[i,j] > 0){
+      if(DecisionTree[i,j] == Cashflow[i,j]){
         DecisionTree[i,j]='Invest'
       } else {
         DecisionTree[i,j]='Wait'
@@ -366,6 +404,8 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)
   #Cashflow Matrix
   print("Cashflow:")
   print(Cashflow)
+  print("Option Value:")
+  print(Option_Value)
   #Decision Tree
   print("Decision Tree:")
   print(DecisionTree[0:n,0:n])
