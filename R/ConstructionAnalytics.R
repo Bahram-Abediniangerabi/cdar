@@ -18,7 +18,7 @@ LCCA_MC=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = NA, recu
   ##n_loop=10000
   ##comp1 = rep(100, length.out=n_loop)
   ##comp2 = runif(n_loop, min = 100, max = 300)
-  ##comp3 = rtriangle(n_loop, a =10, b = 200, c = 180)
+  ##comp3 = rtriangle(n_loop, a =10, b = 300, c = 280)
   ##comp4 = rnorm(n_loop, mean=100, sd=20)
   ##comp5 = rlnorm(n_loop, meanlog = 10, sdlog = 1)
   ##comp6 = rweibull(n_loop, shape=0.75, scale=0.1)
