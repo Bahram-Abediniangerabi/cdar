@@ -10,7 +10,7 @@
 #' @param n Investment Horizon (yearly)
 #' @param n_loop Number of Monte Carlo Iterations
 #' @return Returns the histogram plot of all recurring cost components (inputs) and histogram, kernel density, and cumulative density function plots of net present value and equivalent uniform value (outputs) for the project.
-#' @examples LCCA_MC(comp1 = rnorm(10, mean=3, sd=1), r =0.05, recurring_cost = 10,  n=10, n_loop = 10)
+#' @examples LCCA_MC(comp1 = rnorm(10, mean=3, sd=1), r =0.05, recurring_cost = 10,  n=10, n_loop = 100)
 #' @export
 LCCA_MC=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = NA, recurring_cost = NA, r, n, n_loop){
   all=list(comp1,comp2,comp3,comp4,comp5,recurring_cost,r,n_loop, n)
