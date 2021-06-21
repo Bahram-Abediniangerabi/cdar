@@ -232,16 +232,16 @@ BinomialTree <- function(S, I, Time, r, sigma, dt)
 
     ### Function Outputs
     # Printing Model Parameters
-    param = c(S,Time,1+r,sigma,n-1,u,1/u,p,1-p)
-    (Parameters <- structure(param,names=c("S","Time","Rf","sigma","n","Up","Down","Pi_Up","Pi_Down")))
+    param = c(S,Time,1+r,sigma,n-1,k,u,1/u,p,1-p)
+    (Parameters <- structure(param,names=c("S","Time","Rf","sigma","n","k","Up","Down","Pi_Up","Pi_Down")))
     print("Model Parameters:")
-    print(Parameters,digits=2)
+    print(Parameters,digits=3)
     print("Binomial Tree:")
     print(Tree_rounded)
     print("Cashflow:")
-    print(Cashflow,digits=2)
+    print(Cashflow,digits=3)
     print("Option Value:")
-    print(Option_Value,digits=2)
+    print(Option_Value,digits=3)
     print("Decision Tree:")
     print(DecisionTree[0:n,0:n])
     }
@@ -400,20 +400,20 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)
     ggplot(Investment_Probability_Table, aes(x=as.array(X_axis), y=Label)) +
     geom_bar(stat="identity", colour="Navy") + xlab("Year") + ylab("Likelihood of Implementation") +
     geom_text(aes(label=Label), position=position_dodge(width=0.9), vjust=-0.25)
-  param = c(S,Time,1+r,sigma,n-1,u,1/u,p,1-p)
-  (Parameters <- structure(param,names=c("S","Time","Rf","sigma","n","Up","Down","Pi_Up","Pi_Down")))
+  param = c(S,Time,1+r,sigma,n-1,k,u,1/u,p,1-p)
+  (Parameters <- structure(param,names=c("S","Time","Rf","sigma","n","k","Up","Down","Pi_Up","Pi_Down")))
 
   ######Function Outputs######
   print("Model Parameters:")
-  print(Parameters,digits=2)
+  print(Parameters,digits=3)
   #State Variable Binomial Tree
   print("Binomial Tree:")
   print(Tree_rounded)
   #Cashflow Matrix
   print("Cashflow:")
-  print(Cashflow,digits=2)
+  print(Cashflow,digits=3)
   print("Option Value:")
-  print(Option_Value,digits=2)
+  print(Option_Value,digits=3)
   #Decision Tree
   print("Decision Tree:")
   print(DecisionTree[0:n,0:n])
