@@ -42,5 +42,5 @@ Returns the histogram plot of all recurring cost components (inputs) and histogr
 This R function will provide probabilistic LCCA for a projects with several uncertain initail cost components.
 }
 \examples{
-LCCA_MC(comp1 = rnorm(10, mean=3, sd=1), r =0.05, recurring_cost = 10,  n=10, n_loop = 10)
+LCCA_MC(comp1 = rnorm(10, mean=3, sd=1), r =0.05, recurring_cost = 10,  n=10, n_loop = 1000)
 }
