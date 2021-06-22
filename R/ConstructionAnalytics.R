@@ -31,10 +31,11 @@ LCCA_MC=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = NA, recu
   if (missing(comp3)){comp3 = rep(0, length.out=n_loop)} else {comp3 = comp3}
   if (missing(comp4)){comp4 = rep(0, length.out=n_loop)} else {comp4 = comp4}
   if (missing(comp5)){comp5 = rep(0, length.out=n_loop)} else {comp5 = comp5}
-  if (missing(recurring_cost)){recurring_cost_list = rep(0, length.out=n)} else {
-    recurring_cost_list = rep(recurring_cost*(((1+r)^n)-1)/(r*(1+r)^n), length.out = n)}
+  if (missing(recurring_cost)){recurring_cost = 0} else {
+    recurring_cost = recurring_cost}
 
-  npv_total_cost = comp1 + comp2 + comp3 + comp4 + comp5 + recurring_cost_list
+  recurring_cost_list = npv(cf_t0 = 0 , cf = recurring_cost  , times = 1:length(recurring_cost)  , r = r)
+  npv_total_cost = comp1 + comp2 + comp3 + comp4 + comp5 + rep(recurring_cost_list, length.out = n_loop)
   euv_total_cost = npv_total_cost*(r*(1+r)^n)/(((1+r)^n)-1)
 
   #print(npv_recurring_cost)
@@ -87,10 +88,11 @@ EUAC_MC=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = NA, recu
   if (missing(comp3)){comp3 = rep(0, length.out=n_loop)} else {comp3 = comp3}
   if (missing(comp4)){comp4 = rep(0, length.out=n_loop)} else {comp4 = comp4}
   if (missing(comp5)){comp5 = rep(0, length.out=n_loop)} else {comp5 = comp5}
-  if (missing(recurring_cost)){recurring_cost_list = rep(0, length.out=n)} else {
-    recurring_cost_list = rep(recurring_cost*(((1+r)^n)-1)/(r*(1+r)^n), length.out = n)}
+  if (missing(recurring_cost)){recurring_cost = 0} else {
+    recurring_cost = recurring_cost}
 
-  npv_total_cost = comp1 + comp2 + comp3 + comp4 + comp5 + recurring_cost_list
+  recurring_cost_list = npv(cf_t0 = 0 , cf = recurring_cost  , times = 1:length(recurring_cost)  , r = r)
+  npv_total_cost = comp1 + comp2 + comp3 + comp4 + comp5 + rep(recurring_cost_list, length.out = n_loop)
   euv_total_cost = npv_total_cost*(r*(1+r)^n)/(((1+r)^n)-1)
 
   #print(npv_recurring_cost)
