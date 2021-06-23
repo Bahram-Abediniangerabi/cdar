@@ -124,17 +124,18 @@ EUAC_MC=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = NA, recu
 #' @param r Rate of Return
 #' @param sigma Fluctuations in the Price of State Variable
 #' @param Time Investment Horizon (yearly)
+#' @param k Risk-Adjusted Growth Factor
 #' @return Returns a binomial tree for the state variable "S", cashflow matrix calculated from the binomial tree and the investment cost, decision matrix for investment for different situations through the investment horizon, and a binomial tree plot.
-#' @examples BinomialTree(S=50, I=50, Time=5, r=0.2, sigma=0.4, dt=1)
+#' @examples BinomialTree(S=50, I=30, Time=5, r=0.07, sigma=0.15, dt=1, k =1.02)
 #' @export
-BinomialTree <- function(S, I, Time, r, sigma, dt)
+BinomialTree <- function(S, I, Time, r, sigma, dt, k = NA)
   {
   options(warn=-1)
     # Parameters:
     n = (Time / dt)+1
     u  = exp(sigma*sqrt(dt))
     d  = 1 / u
-    k  = exp(r*dt)
+    if (missing(k)){k  = exp(r*dt)} else {k = k}
     p  = (k - d) / (u - d)
     Df = exp(-r*dt)
     q  = 1-p
@@ -260,18 +261,19 @@ BinomialTree <- function(S, I, Time, r, sigma, dt)
 #' @param r Rate of Return
 #' @param sigma Fluctuations in the Price of State Variable
 #' @param Time Investment Horizon (yearly)
+#' @param k Risk-Adjusted Growth Factor
 #' @param MC_loops Number of Monte Carlo Simulations
 #' @return Returns a binomial tree for the state variable "S", cashflow matrix calculated from the binomial tree and the investment cost, decision matrix for investment for different situations through the investment horizon, a binomial tree plot, and the likelihood of implementation plot.
 #' @examples BinomialTree_MC(S=10, I=100, Time=10, r=.01, sigma=0.6, dt=1, MC_loops = 1000)
 #' @export
-BinomialTree_MC <- function(S, I, Time, r, sigma, dt, MC_loops)
+BinomialTree_MC <- function(S, I, Time, r, sigma, dt, k = NA, MC_loops)
   {
   options(warn=-1)
   # Parameters:
   n = (Time / dt)+1
   u  = exp(sigma*sqrt(dt))
   d  = 1 / u
-  k  = exp(r*dt)
+  if (missing(k)){k  = exp(r*dt)} else {k = k}
   p  = (k - d) / (u - d)
   Df = exp(-r*dt)
   # Algorithm:
