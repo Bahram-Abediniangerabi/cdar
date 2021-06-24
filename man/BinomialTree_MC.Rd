@@ -4,7 +4,7 @@
 \alias{BinomialTree_MC}
 \title{Binomial Real Options Pricing with Monte Carlo Simulation}
 \usage{
-BinomialTree_MC(S, I, Time, r, sigma, dt, MC_loops)
+BinomialTree_MC(S, I, Time, r, sigma, dt, k = NA, MC_loops)
 }
 \arguments{
 \item{S}{State Variable}
@@ -18,6 +18,8 @@ BinomialTree_MC(S, I, Time, r, sigma, dt, MC_loops)
 \item{sigma}{Fluctuations in the Price of State Variable}
 
 \item{dt}{Time Intervals within a Year}
+
+\item{k}{Risk-Adjusted Growth Factor}
 
 \item{MC_loops}{Number of Monte Carlo Simulations}
 }
