@@ -26,8 +26,15 @@ LCCA_MC=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = NA, recu
   ##recurring_cost = rnorm(n, mean=26, sd=5)
   #LCCA_MC(comp1 = comp1, comp2 = comp2, comp3 = comp3, comp4 = comp4, comp5 = comp5,  r=0.05, n_loop=n_loop, n=n, recurring_cost = recurring_cost)
 
-  #NULL
+  #Null
   if(any(lapply(all,is.null)==T)) stop("Cannot input any variables as NULL.")
+  #Plot Non-Missing Comps
+  if (!missing(comp1)){hist(comp1, col = "Gray",xlab="Comp1", main="Histogram of Comp1")}
+  if (!missing(comp2)){hist(comp2, col = "Gray",xlab="Comp2", main="Histogram of Comp2")}
+  if (!missing(comp3)){hist(comp3, col = "Gray",xlab="Comp3", main="Histogram of Comp3")}
+  if (!missing(comp4)){hist(comp4, col = "Gray",xlab="Comp4", main="Histogram of Comp4")}
+  if (!missing(comp5)){hist(comp5, col = "Gray",xlab="Comp5", main="Histogram of Comp5")}
+  if (!missing(recurring_cost)){hist(recurring_cost, col = "Gray",xlab="recurring_cost", main="Histogram of recurring_cost")}
   if (missing(comp1)){comp1 = rep(0, length.out=n_loop)} else {comp1 = comp1}
   if (missing(comp2)){comp2 = rep(0, length.out=n_loop)} else {comp2 = comp2}
   if (missing(comp3)){comp3 = rep(0, length.out=n_loop)} else {comp3 = comp3}
@@ -35,18 +42,14 @@ LCCA_MC=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = NA, recu
   if (missing(comp5)){comp5 = rep(0, length.out=n_loop)} else {comp5 = comp5}
   if (missing(recurring_cost)){recurring_cost = 0} else {
     recurring_cost = recurring_cost}
+  if (length(recurring_cost)==1){recurring_cost_list = rep(recurring_cost, length.out=n)} else {recurring_cost_list = recurring_cost}
 
-  recurring_cost_list = npv(cf_t0 = 0 , cf = recurring_cost  , times = 1:length(recurring_cost)  , r = r)
-  npv_total_cost = comp1 + comp2 + comp3 + comp4 + comp5 + rep(recurring_cost_list, length.out = n_loop)
+  #Calculate NPV and EUAC
+  recurring_cost_npv = npv(cf_t0 = 0 , cf = recurring_cost_list  , times = 1:length(recurring_cost_list)  , r = r)
+  npv_total_cost = comp1 + comp2 + comp3 + comp4 + comp5 + rep(recurring_cost_npv, length.out = n_loop)
   euv_total_cost = npv_total_cost*(r*(1+r)^n)/(((1+r)^n)-1)
 
-  #print(npv_recurring_cost)
-  hist(comp1, col = "Gray",xlab="Comp1", main="Histogram of Comp1")
-  hist(comp2, col = "Gray",xlab="Comp1", main="Histogram of Comp2")
-  hist(comp3, col = "Gray",xlab="Comp1", main="Histogram of Comp3")
-  hist(comp4, col = "Gray",xlab="Comp1", main="Histogram of Comp4")
-  hist(comp5, col = "Gray",xlab="Comp1", main="Histogram of Comp5")
-
+  #Plot Outputs
   h <- hist(npv_total_cost, col = "Gray",xlab="Net Present Values", main="Histogram of Net Present Values")
   xfit<-seq(min(npv_total_cost),max(npv_total_cost),length=40)
   yfit<-dnorm(xfit,mean=mean(npv_total_cost),sd=sd(npv_total_cost))
@@ -85,8 +88,15 @@ EUAC_MC=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = NA, recu
   ##recurring_cost = rnorm(n, mean=26, sd=5)
   #EUAC_MC(comp1 = comp1, comp2 = comp2, comp3 = comp3, comp4 = comp4, comp5 = comp5,  r=0.05, n_loop=n_loop, n=n, recurring_cost = recurring_cost)
 
-  #NULL
+  #Null
   if(any(lapply(all,is.null)==T)) stop("Cannot input any variables as NULL.")
+  #Plot NonMissing Comps
+  if (!missing(comp1)){hist(comp1, col = "Gray",xlab="Comp1", main="Histogram of Comp1")}
+  if (!missing(comp2)){hist(comp2, col = "Gray",xlab="Comp2", main="Histogram of Comp2")}
+  if (!missing(comp3)){hist(comp3, col = "Gray",xlab="Comp3", main="Histogram of Comp3")}
+  if (!missing(comp4)){hist(comp4, col = "Gray",xlab="Comp4", main="Histogram of Comp4")}
+  if (!missing(comp5)){hist(comp5, col = "Gray",xlab="Comp5", main="Histogram of Comp5")}
+  if (!missing(recurring_cost)){hist(recurring_cost, col = "Gray",xlab="recurring_cost", main="Histogram of recurring_cost")}
   if (missing(comp1)){comp1 = rep(0, length.out=n_loop)} else {comp1 = comp1}
   if (missing(comp2)){comp2 = rep(0, length.out=n_loop)} else {comp2 = comp2}
   if (missing(comp3)){comp3 = rep(0, length.out=n_loop)} else {comp3 = comp3}
@@ -94,18 +104,14 @@ EUAC_MC=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = NA, recu
   if (missing(comp5)){comp5 = rep(0, length.out=n_loop)} else {comp5 = comp5}
   if (missing(recurring_cost)){recurring_cost = 0} else {
     recurring_cost = recurring_cost}
+  if (length(recurring_cost)==1){recurring_cost_list = rep(recurring_cost, length.out=n)} else {recurring_cost_list = recurring_cost}
 
-  recurring_cost_list = npv(cf_t0 = 0 , cf = recurring_cost  , times = 1:length(recurring_cost)  , r = r)
-  npv_total_cost = comp1 + comp2 + comp3 + comp4 + comp5 + rep(recurring_cost_list, length.out = n_loop)
+  #Calculate NPV and EUAC
+  recurring_cost_npv = npv(cf_t0 = 0 , cf = recurring_cost_list  , times = 1:length(recurring_cost_list)  , r = r)
+  npv_total_cost = comp1 + comp2 + comp3 + comp4 + comp5 + rep(recurring_cost_npv, length.out = n_loop)
   euv_total_cost = npv_total_cost*(r*(1+r)^n)/(((1+r)^n)-1)
 
-  #print(npv_recurring_cost)
-  hist(comp1, col = "Gray",xlab="Comp1", main="Histogram of Comp1")
-  hist(comp2, col = "Gray",xlab="Comp1", main="Histogram of Comp2")
-  hist(comp3, col = "Gray",xlab="Comp1", main="Histogram of Comp3")
-  hist(comp4, col = "Gray",xlab="Comp1", main="Histogram of Comp4")
-  hist(comp5, col = "Gray",xlab="Comp1", main="Histogram of Comp5")
-
+  #Plot Outputs
   h <- hist(euv_total_cost, col = "Gray",xlab="Net Present Values", main="Histogram of Net Present Values")
   xfit<-seq(min(euv_total_cost),max(euv_total_cost),length=40)
   yfit<-dnorm(xfit,mean=mean(euv_total_cost),sd=sd(euv_total_cost))
