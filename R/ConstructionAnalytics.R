@@ -131,8 +131,9 @@ EUAC_MC=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = NA, recu
 #' @param sigma Fluctuations in the Price of State Variable
 #' @param Time Investment Horizon (yearly)
 #' @param k Risk-Adjusted Growth Factor
+#' @param imm collect the cashflows immediately after investemnt if true, otherwise collect cashflows after one year (TRUE)
 #' @return Returns a binomial tree for the state variable "S", cashflow matrix calculated from the binomial tree and the investment cost, decision matrix for investment for different situations through the investment horizon, and a binomial tree plot.
-#' @examples BinomialTree(S=50, I=30, Time=5, r=0.07, sigma=0.15, dt=1, k =1.02)
+#' @examples BinomialTree(S=50, I=30, Time=5, r=0.07, sigma=0.15, dt=1, k =1.02, imm=TRUE)
 #' @export
 BinomialTree <- function(S, I, Time, r, sigma, dt, k = NA)
   {
@@ -268,11 +269,12 @@ BinomialTree <- function(S, I, Time, r, sigma, dt, k = NA)
 #' @param sigma Fluctuations in the Price of State Variable
 #' @param Time Investment Horizon (yearly)
 #' @param k Risk-Adjusted Growth Factor
+#' @param imm collect the cashflows immediately after investemnt if true, otherwise collect cashflows after one year (TRUE)
 #' @param MC_loops Number of Monte Carlo Simulations
 #' @return Returns a binomial tree for the state variable "S", cashflow matrix calculated from the binomial tree and the investment cost, decision matrix for investment for different situations through the investment horizon, a binomial tree plot, and the likelihood of implementation plot.
 #' @examples BinomialTree_MC(S=10, I=100, Time=10, r=.01, sigma=0.6, dt=1, MC_loops = 1000)
 #' @export
-BinomialTree_MC <- function(S, I, Time, r, sigma, dt, k = NA, MC_loops)
+BinomialTree_MC <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE, MC_loops)
   {
   options(warn=-1)
   # Parameters:
