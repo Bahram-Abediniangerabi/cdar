@@ -135,57 +135,57 @@ EUAC_MC=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = NA, recu
 #' @return Returns a binomial tree for the state variable "S", cashflow matrix calculated from the binomial tree and the investment cost, decision matrix for investment for different situations through the investment horizon, and a binomial tree plot.
 #' @examples BinomialTree(S=50, I=30, Time=5, r=0.07, sigma=0.15, dt=1, k =1.02, imm=TRUE)
 #' @export
-BinomialTree <- function(S, I, Time, r, sigma, dt, k = NA)
-  {
+BinomialTree <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE)
+{
   options(warn=-1)
-    # Parameters:
-    n = (Time / dt)+1
-    u  = exp(sigma*sqrt(dt))
-    d  = 1 / u
-    if (missing(k)){k  = exp(r*dt)} else {k = k}
-    p  = (k - d) / (u - d)
-    Df = exp(-r*dt)
-    q  = 1-p
-    # Algorithm:
-    OptionValue = (S*u^(0:n)*d^(n:0))
-    offset = 1
-    Tree = OptionValue = (abs(OptionValue)+OptionValue)/2
-    {for (j in (n-1):0) {
-      Tree <-c(Tree, rep(0, times=n-j))
-      for (i in 0:j) {
-        OptionValue[i+offset] =
-          max(((S*u^i*d^(abs(i-j)))),
-              (p*OptionValue[i+1+offset] +
-                 (1-p)*OptionValue[i+offset]) * Df )
-        Tree = c(Tree, OptionValue[i+offset]) } } }
-    Tree = matrix(rev(Tree), byrow = FALSE, ncol = n+1)
-    colnames(Tree) <- paste(0:n, sep = "")
-    rownames(Tree) <- paste( 0:n, sep = "")
+  # Parameters:
+  n = (Time / dt)+1
+  u  = exp(sigma*sqrt(dt))
+  d  = 1 / u
+  if (missing(k)){k  = exp(r*dt)} else {k = k}
+  p  = (k - d) / (u - d)
+  Df = exp(-r*dt)
+  q  = 1-p
+  # Algorithm:
+  OptionValue = (S*u^(0:n)*d^(n:0))
+  offset = 1
+  Tree = OptionValue = (abs(OptionValue)+OptionValue)/2
+  {for (j in (n-1):0) {
+    Tree <-c(Tree, rep(0, times=n-j))
+    for (i in 0:j) {
+      OptionValue[i+offset] =
+        max(((S*u^i*d^(abs(i-j)))),
+            (p*OptionValue[i+1+offset] +
+               (1-p)*OptionValue[i+offset]) * Df)
+      Tree = c(Tree, OptionValue[i+offset]) } } }
+  Tree = matrix(rev(Tree), byrow = FALSE, ncol = n+1)
+  colnames(Tree) <- paste(0:n, sep = "")
+  rownames(Tree) <- paste( 0:n, sep = "")
 
-    # Binomial Lattice for State Variable:
-    dx = -0.025
-    dy = 0.4
-    cex = 1
-    Tree_rounded = round(Tree, digits = 2)
-    depth = ncol(Tree_rounded)-1
-    lablist<-as.vector(c(0:(depth-1)))
-    plot(x = c(1,depth), y = c(-depth, depth), col = 0, xlab = "Investment Horizon (Years)", ylab = "Up or Down", labels = FALSE)
-    axis(1, at=seq(1, n, by=1),labels = FALSE)
-    axis(2)
-    text(seq(1, n, by=1), par("usr")[3] - 0.2, labels = lablist, pos = 1, xpd = TRUE)
-    points(x = 1, y = 0)
-    text(1+dx, 0+dy, deparse(Tree_rounded[1, 1]), cex = cex)
-    for (i in 1:(depth-1) ) {
-      y = seq(from = -i, by = 2, length = i+1)
-      x = rep(i, times = length(y))+1
-      points(x, y, col = 1)
-      for (j in 1:length(x))
-        text(x[j]+dx, y[j]+dy, deparse(Tree_rounded[length(x)+1-j,i+1]), cex = cex)
-      y = (-i):i
-      x = rep(c(i+1,i), times = 2*i)[1:length(y)]
-      lines(x, y, col = 2)
-    }
-    # Cashflow Matrix
+  # Binomial Lattice for State Variable:
+  dx = -0.025
+  dy = 0.4
+  cex = 1
+  Tree_rounded = round(Tree, digits = 2)
+  depth = ncol(Tree_rounded)-1
+  lablist<-as.vector(c(0:(depth-1)))
+  plot(x = c(1,depth), y = c(-depth, depth), col = 0, xlab = "Investment Horizon (Years)", ylab = "Up or Down", labels = FALSE)
+  axis(1, at=seq(1, n, by=1),labels = FALSE)
+  axis(2)
+  text(seq(1, n, by=1), par("usr")[3] - 0.2, labels = lablist, pos = 1, xpd = TRUE)
+  points(x = 1, y = 0)
+  text(1+dx, 0+dy, deparse(Tree_rounded[1, 1]), cex = cex)
+  for (i in 1:(depth-1) ) {
+    y = seq(from = -i, by = 2, length = i+1)
+    x = rep(i, times = length(y))+1
+    points(x, y, col = 1)
+    for (j in 1:length(x))
+      text(x[j]+dx, y[j]+dy, deparse(Tree_rounded[length(x)+1-j,i+1]), cex = cex)
+    y = (-i):i
+    x = rep(c(i+1,i), times = 2*i)[1:length(y)]
+    lines(x, y, col = 2)
+  }
+  if(imm==TRUE){# Cashflow Matrix
     Cashflow=matrix(0, nrow = n+1, ncol = n+1)
     for(i in n:1){
       for(j in n:1){
@@ -207,7 +207,7 @@ BinomialTree <- function(S, I, Time, r, sigma, dt, k = NA)
     Option_Value=matrix(0, nrow = n+1, ncol = n+1)
     for(i in n:1){
       for(j in n:1){
-        Option_Value[i,j]=max(-I+Tree[i,j]+((p*Cashflow[i,j+1])+((1-p)*Cashflow[i+1,j+1]))/(1+r),((p*Cashflow[i,j+1])+((1-p)*Cashflow[i+1,j+1]))/(1+r))
+        Option_Value[i,j]=max(-I+Tree[i,j]+((p*Cashflow[i,j+1])+((1-p)*Cashflow[i+1,j+1]))/(1+r),((p*Option_Value[i,j+1])+((1-p)*Option_Value[i+1,j+1]))/(1+r))
       }}
     # Triangle(Cashflow)
     for(i in 0:n+1){
@@ -219,46 +219,80 @@ BinomialTree <- function(S, I, Time, r, sigma, dt, k = NA)
       }
     }
     colnames(Option_Value) <- paste(0:n, sep = "")
-    rownames(Option_Value) <- paste( 0:n, sep = "")
-
-    # DecisionTree Matrix
-    DecisionTree = as.data.frame(Option_Value)
-    for(i in 1:n){
-      for(j in 1:n){
-        if(DecisionTree[i,j] == Cashflow[i,j]){
-          DecisionTree[i,j]='Invest'
-        } else {
-          DecisionTree[i,j]='Wait'
+    rownames(Option_Value) <- paste( 0:n, sep = "")}else{
+      # Cashflow Matrix
+      Cashflow=matrix(0, nrow = n+1, ncol = n+1)
+      for(i in n:1){
+        for(j in n:1){
+          Cashflow[i,j]=-I+((p*Tree[i,j+1])+((1-p)*Tree[i+1,j+1]))/(1+r)
+        }}
+      # Triangle(Cashflow)
+      for(i in 0:n+1){
+        for(j in 0:n+1){
+          if(i>j){Cashflow[i,j]=0
+          }else{
+            Cashflow[i,j]=Cashflow[i,j]
+          }
         }
       }
-    }
-    # Triangle(DecisionTree)
-    for(i in 0:n+1){
-      for(j in 0:n+1){
-        if(i>j){DecisionTree[i,j]='_'
-        }else{
-          DecisionTree[i,j]=DecisionTree[i,j]
+      colnames(Cashflow) <- paste(0:n, sep = "")
+      rownames(Cashflow) <- paste( 0:n, sep = "")
+
+      # Option Value Matrix
+      Option_Value=matrix(0, nrow = n+1, ncol = n+1)
+      for(i in n:1){
+        for(j in n:1){
+          Option_Value[i,j]=max(Cashflow[i,j],((p*Option_Value[i,j+1])+((1-p)*Option_Value[i+1,j+1]))/(1+r))
+        }}
+      # Triangle(Cashflow)
+      for(i in 0:n+1){
+        for(j in 0:n+1){
+          if(i>j){Option_Value[i,j]=0
+          }else{
+            Option_Value[i,j]=Option_Value[i,j]
+          }
         }
       }
+      colnames(Option_Value) <- paste(0:n, sep = "")
+      rownames(Option_Value) <- paste( 0:n, sep = "")}
+  # DecisionTree Matrix
+  DecisionTree = as.data.frame(Option_Value)
+  for(i in 1:n){
+    for(j in 1:n){
+      if(DecisionTree[i,j] == Cashflow[i,j]){
+        DecisionTree[i,j]='Invest'
+      } else {
+        DecisionTree[i,j]='Wait'
+      }
     }
-    colnames(DecisionTree) <- paste("Year ", 0:n, sep = "")
-    rownames(DecisionTree) <- paste( 0:n, sep = "")
+  }
+  # Triangle(DecisionTree)
+  for(i in 0:n+1){
+    for(j in 0:n+1){
+      if(i>j){DecisionTree[i,j]='_'
+      }else{
+        DecisionTree[i,j]=DecisionTree[i,j]
+      }
+    }
+  }
+  colnames(DecisionTree) <- paste("Year ", 0:n, sep = "")
+  rownames(DecisionTree) <- paste( 0:n, sep = "")
 
-    ### Function Outputs
-    # Printing Model Parameters
-    param = c(S,Time,1+r,sigma,n-1,k,u,1/u,p,1-p)
-    (Parameters <- structure(param,names=c("S","Time","Rf","sigma","n","k","Up","Down","Pi_Up","Pi_Down")))
-    print("Model Parameters:")
-    print(Parameters,digits=3)
-    print("Binomial Tree:")
-    print(Tree_rounded)
-    print("Cashflow:")
-    print(Cashflow)
-    print("Option Value:")
-    print(Option_Value)
-    print("Decision Tree:")
-    print(DecisionTree[0:n,0:n])
-    }
+  ### Function Outputs
+  # Printing Model Parameters
+  param = c(S,Time,1+r,sigma,n-1,k,u,1/u,p,1-p)
+  (Parameters <- structure(param,names=c("S","Time","Rf","sigma","n","k","Up","Down","Pi_Up","Pi_Down")))
+  print("Model Parameters:")
+  print(Parameters,digits=3)
+  print("Binomial Tree:")
+  print(Tree_rounded)
+  print("Cashflow:")
+  print(Cashflow)
+  print("Option Value:")
+  print(Option_Value)
+  print("Decision Tree:")
+  print(DecisionTree[0:n,0:n])
+}
 
 #' @title Binomial Real Options Pricing with Monte Carlo Simulation
 #' @description This R function will provide real option prices and the probability of investment within the investment horizon using binomial lattice and monte carlo simulations.
