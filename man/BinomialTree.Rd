@@ -4,7 +4,7 @@
 \alias{BinomialTree}
 \title{Real Options Pricing using Binomial Lattice}
 \usage{
-BinomialTree(S, I, Time, r, sigma, dt, k = NA)
+BinomialTree(S, I, Time, r, sigma, dt, k = NA, imm = TRUE)
 }
 \arguments{
 \item{S}{State Variable}
@@ -20,6 +20,8 @@ BinomialTree(S, I, Time, r, sigma, dt, k = NA)
 \item{dt}{Time Intervals within a Year}
 
 \item{k}{Risk-Adjusted Growth Factor}
+
+\item{imm}{collect the cashflows immediately after investemnt if true, otherwise collect cashflows after one year (TRUE)}
 }
 \value{
 Returns a binomial tree for the state variable "S", cashflow matrix calculated from the binomial tree and the investment cost, decision matrix for investment for different situations through the investment horizon, and a binomial tree plot.
@@ -28,5 +30,5 @@ Returns a binomial tree for the state variable "S", cashflow matrix calculated f
 This R function will provide real option prices for underlying assets (Infrastructure Projects, Buildings, etc) using binomial lattice.
 }
 \examples{
-BinomialTree(S=50, I=30, Time=5, r=0.07, sigma=0.15, dt=1, k =1.02)
+BinomialTree(S=50, I=30, Time=5, r=0.07, sigma=0.15, dt=1, k =1.02, imm=TRUE)
 }

@@ -4,7 +4,7 @@
 \alias{BinomialTree_MC}
 \title{Binomial Real Options Pricing with Monte Carlo Simulation}
 \usage{
-BinomialTree_MC(S, I, Time, r, sigma, dt, k = NA, MC_loops)
+BinomialTree_MC(S, I, Time, r, sigma, dt, k = NA, imm = TRUE, MC_loops)
 }
 \arguments{
 \item{S}{State Variable}
@@ -21,6 +21,8 @@ BinomialTree_MC(S, I, Time, r, sigma, dt, k = NA, MC_loops)
 
 \item{k}{Risk-Adjusted Growth Factor}
 
+\item{imm}{collect the cashflows immediately after investemnt if true, otherwise collect cashflows after one year (TRUE)}
+
 \item{MC_loops}{Number of Monte Carlo Simulations}
 }
 \value{
@@ -30,5 +32,5 @@ Returns a binomial tree for the state variable "S", cashflow matrix calculated f
 This R function will provide real option prices and the probability of investment within the investment horizon using binomial lattice and monte carlo simulations.
 }
 \examples{
-BinomialTree_MC(S=10, I=100, Time=10, r=.01, sigma=0.6, dt=1, MC_loops = 1000)
+BinomialTree_MC(S=10, I=100, Time=10, r=.01, sigma=0.6, dt=1, imm = TRUE, MC_loops = 1000)
 }
