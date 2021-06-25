@@ -306,7 +306,7 @@ BinomialTree <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE)
 #' @param imm collect the cashflows immediately after investemnt if true, otherwise collect cashflows after one year (TRUE)
 #' @param MC_loops Number of Monte Carlo Simulations
 #' @return Returns a binomial tree for the state variable "S", cashflow matrix calculated from the binomial tree and the investment cost, decision matrix for investment for different situations through the investment horizon, a binomial tree plot, and the likelihood of implementation plot.
-#' @examples BinomialTree_MC(S=10, I=100, Time=10, r=.01, sigma=0.6, dt=1, MC_loops = 1000)
+#' @examples BinomialTree_MC(S=10, I=100, Time=10, r=.01, sigma=0.6, dt=1, imm = TRUE, MC_loops = 1000)
 #' @export
 BinomialTree_MC <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE, MC_loops)
   {
@@ -358,41 +358,77 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE, MC_loops
     x = rep(c(i+1,i), times = 2*i)[1:length(y)]
     lines(x, y, col = 2)
   }
-  #Cashflow Matrix
-  Cashflow=matrix(0, nrow = n+1, ncol = n+1)
-  for(i in n:1){
-    for(j in n:1){
-      Cashflow[i,j]=-I+Tree[i,j]+((p*Cashflow[i,j+1])+((1-p)*Cashflow[i+1,j+1]))/(1+r)
-    }}
-  #Triangle(Cashflow)
-  for(i in 0:n+1){
-    for(j in 0:n+1){
-      if(i>j){Cashflow[i,j]=0
-      }else{
-        Cashflow[i,j]=Cashflow[i,j]
+  # Cashflow Matrix
+  if(imm==TRUE){
+    Cashflow=matrix(0, nrow = n+1, ncol = n+1)
+    for(i in n:1){
+      for(j in n:1){
+        Cashflow[i,j]=-I+Tree[i,j]+((p*Cashflow[i,j+1])+((1-p)*Cashflow[i+1,j+1]))/(1+r)
+      }}
+    # Triangle(Cashflow)
+    for(i in 0:n+1){
+      for(j in 0:n+1){
+        if(i>j){Cashflow[i,j]=0
+        }else{
+          Cashflow[i,j]=Cashflow[i,j]
+        }
       }
     }
-  }
-  colnames(Cashflow) <- paste(0:n, sep = "")
-  rownames(Cashflow) <- paste( 0:n, sep = "")
+    colnames(Cashflow) <- paste(0:n, sep = "")
+    rownames(Cashflow) <- paste( 0:n, sep = "")
 
-  # Option Value Matrix
-  Option_Value=matrix(0, nrow = n+1, ncol = n+1)
-  for(i in n:1){
-    for(j in n:1){
-      Option_Value[i,j]=max(-I+Tree[i,j]+((p*Cashflow[i,j+1])+((1-p)*Cashflow[i+1,j+1]))/(1+r),((p*Cashflow[i,j+1])+((1-p)*Cashflow[i+1,j+1]))/(1+r))
-    }}
-  # Triangle(Cashflow)
-  for(i in 0:n+1){
-    for(j in 0:n+1){
-      if(i>j){Option_Value[i,j]=0
-      }else{
-        Option_Value[i,j]=Option_Value[i,j]
+    # Option Value Matrix
+    Option_Value=matrix(0, nrow = n+1, ncol = n+1)
+    for(i in n:1){
+      for(j in n:1){
+        Option_Value[i,j]=max(-I+Tree[i,j]+((p*Cashflow[i,j+1])+((1-p)*Cashflow[i+1,j+1]))/(1+r),((p*Option_Value[i,j+1])+((1-p)*Option_Value[i+1,j+1]))/(1+r))
+      }}
+    # Triangle(Cashflow)
+    for(i in 0:n+1){
+      for(j in 0:n+1){
+        if(i>j){Option_Value[i,j]=0
+        }else{
+          Option_Value[i,j]=Option_Value[i,j]
+        }
       }
     }
-  }
-  colnames(Option_Value) <- paste(0:n, sep = "")
-  rownames(Option_Value) <- paste( 0:n, sep = "")
+    colnames(Option_Value) <- paste(0:n, sep = "")
+    rownames(Option_Value) <- paste( 0:n, sep = "")}else{
+      # Cashflow Matrix
+      Cashflow=matrix(0, nrow = n+1, ncol = n+1)
+      for(i in n:1){
+        for(j in n:1){
+          Cashflow[i,j]=-I+((p*Tree[i,j+1])+((1-p)*Tree[i+1,j+1]))/(1+r)
+        }}
+      # Triangle(Cashflow)
+      for(i in 0:n+1){
+        for(j in 0:n+1){
+          if(i>j){Cashflow[i,j]=0
+          }else{
+            Cashflow[i,j]=Cashflow[i,j]
+          }
+        }
+      }
+      colnames(Cashflow) <- paste(0:n, sep = "")
+      rownames(Cashflow) <- paste( 0:n, sep = "")
+
+      # Option Value Matrix
+      Option_Value=matrix(0, nrow = n+1, ncol = n+1)
+      for(i in n:1){
+        for(j in n:1){
+          Option_Value[i,j]=max(Cashflow[i,j],((p*Option_Value[i,j+1])+((1-p)*Option_Value[i+1,j+1]))/(1+r))
+        }}
+      # Triangle(Cashflow)
+      for(i in 0:n+1){
+        for(j in 0:n+1){
+          if(i>j){Option_Value[i,j]=0
+          }else{
+            Option_Value[i,j]=Option_Value[i,j]
+          }
+        }
+      }
+      colnames(Option_Value) <- paste(0:n, sep = "")
+      rownames(Option_Value) <- paste( 0:n, sep = "")}
 
   #DecisionTree Matrix
   DecisionTree = as.data.frame(Option_Value)
