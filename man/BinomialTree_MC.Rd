@@ -21,7 +21,7 @@ BinomialTree_MC(S, I, Time, r, sigma, dt, k = NA, imm = TRUE, MC_loops)
 
 \item{k}{Risk-Adjusted Growth Factor}
 
-\item{imm}{collect the cashflows immediately after investemnt if true, otherwise collect cashflows after one year (TRUE)}
+\item{imm}{Cashflows are collected immediately after investemnt in the same yesr if it is TRUE, otherwise collect cashflows after one year (default is TRUE)}
 
 \item{MC_loops}{Number of Monte Carlo Simulations}
 }
