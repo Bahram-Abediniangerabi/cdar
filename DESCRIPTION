@@ -1,7 +1,7 @@
 Package: cdar
 Type: Package
 Title: Construction Data Analysis with R
-Version: 0.0.9
+Version: 0.1
 Author: Bahram Abediniangerabi <abedini.bahram@gmail.com>
 Maintainer: Bahram Abediniangerabi <abedini.bahram@gmail.com>
 Description: Functions to support investment under uncertainty including real options method and stochastic life cycle cost analysis.
