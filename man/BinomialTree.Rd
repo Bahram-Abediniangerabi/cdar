@@ -21,7 +21,7 @@ BinomialTree(S, I, Time, r, sigma, dt, k = NA, imm = TRUE)
 
 \item{k}{Risk-Adjusted Growth Factor}
 
-\item{imm}{collect the cashflows immediately after investemnt if true, otherwise collect cashflows after one year (TRUE)}
+\item{imm}{Cashflows are collected immediately after investemnt in the same yesr if it is TRUE, otherwise collect cashflows after one year (default is TRUE)}
 }
 \value{
 Returns a binomial tree for the state variable "S", cashflow matrix calculated from the binomial tree and the investment cost, decision matrix for investment for different situations through the investment horizon, and a binomial tree plot.
