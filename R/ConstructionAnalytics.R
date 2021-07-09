@@ -137,6 +137,7 @@ EUAC_MC=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = NA, recu
 #' @export
 BinomialTree <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE)
 {
+  options(warn=-1)
   # Parameters:
   n = (Time / dt)+1
   u  = exp(sigma*sqrt(dt))
@@ -309,6 +310,7 @@ BinomialTree <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE)
 #' @export
 BinomialTree_MC <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE, MC_loops)
   {
+  options(warn=-1)
   # Parameters:
   n = (Time / dt)+1
   u  = exp(sigma*sqrt(dt))
