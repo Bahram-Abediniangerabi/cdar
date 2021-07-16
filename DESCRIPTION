@@ -8,7 +8,7 @@ Description: Functions to support investment under uncertainty including real op
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
-Imports: forcats, plyr, dplyr,keras, tseries, zoo, lmtest, urca, tsDyn,   ggplot2, forecast, astsa, quantmod, stats, xts, tidyr, FinancialMath, FinCal, LICORS, triangle, histogram
+Imports: forcats,plyr, dplyr,keras, tseries, zoo, lmtest, urca, tsDyn,   ggplot2, forecast, astsa, quantmod, stats, xts, tidyr, FinancialMath, FinCal, LICORS, triangle, histogram
 RoxygenNote: 7.1.1 
 Depends:
   R (>= 3.5.0) 
