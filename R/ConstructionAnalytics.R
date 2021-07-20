@@ -311,6 +311,7 @@ BinomialTree <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE)
 BinomialTree_MC <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE, MC_loops)
   {
   options(warn=-1)
+  V1 <- NULL
   # Parameters:
   n = (Time / dt)+1
   u  = exp(sigma*sqrt(dt))
@@ -486,6 +487,10 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE, MC_loops
     ggplot(Investment_Probability_Table, aes(x=as.array(X_axis), y=Label)) +
     geom_bar(stat="identity", colour="Navy") + xlab("Year") + ylab("Likelihood of Implementation") +
     geom_text(aes(label=Label), position=position_dodge(width=0.9), vjust=-0.25)
+  Invest.per.year.item2 <-
+    ggplot(Investment_Probability_Table, aes(x=as.array(X_axis), y=V1,group = 1)) +
+    geom_line(colour = "blue4", size = 1) + xlab("Year") + ylab("Probability of Investment") +
+    geom_text(aes(label=V1), position=position_dodge(width=0.9), vjust=-0.5)
   param = c(S,Time,1+r,sigma,n-1,k,u,1/u,p,1-p)
   (Parameters <- structure(param,names=c("S","Time","Rf","sigma","n","k","Up","Down","Pi_Up","Pi_Down")))
 
@@ -503,8 +508,8 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE, MC_loops
   #Decision Tree
   print("Decision Tree:")
   print(DecisionTree[0:n,0:n])
-  #print(Investment_Probability_Table)
   print(Invest.per.year.item)
+  print(Invest.per.year.item2)
 }
 
 #' @title Cashflow Diagram
