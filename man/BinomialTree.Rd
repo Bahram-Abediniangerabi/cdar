@@ -9,7 +9,7 @@ BinomialTree(S, I, Time, r, sigma, dt, k = NA, imm = TRUE)
 \arguments{
 \item{S}{State Variable}
 
-\item{I}{Investment}
+\item{I}{Investment (vector): Ex: I = cumprod(c(30, rep(1+0.06, n)))}
 
 \item{Time}{Investment Horizon (yearly)}
 
@@ -30,5 +30,5 @@ Returns a binomial tree for the state variable "S", cashflow matrix calculated f
 This R function will provide real option prices for underlying assets (Infrastructure Projects, Buildings, etc) using binomial lattice.
 }
 \examples{
-BinomialTree(S=50, I=30, Time=5, r=0.07, sigma=0.15, dt=1, k =1.02, imm=TRUE)
+BinomialTree(S=50, I=cumprod(c(30, rep(1+0.06, 5))), Time=5, r=0.07, sigma=0.15, dt=1, k =1.02, imm=TRUE)
 }

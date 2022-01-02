@@ -9,7 +9,7 @@ BinomialTree_MC(S, I, Time, r, sigma, dt, k = NA, imm = TRUE, MC_loops)
 \arguments{
 \item{S}{State Variable}
 
-\item{I}{Investment}
+\item{I}{Investment vector: Ex:cumprod(c(30, rep(1+0.06, n)))}
 
 \item{Time}{Investment Horizon (yearly)}
 
@@ -32,5 +32,5 @@ Returns a binomial tree for the state variable "S", cashflow matrix calculated f
 This R function will provide real option prices and the probability of investment within the investment horizon using binomial lattice and monte carlo simulations.
 }
 \examples{
-BinomialTree_MC(S=10, I=100, Time=10, r=.01, sigma=0.6, dt=1, imm = TRUE, MC_loops = 1000)
+BinomialTree_MC(S=10, I=cumprod(c(30, rep(1+0.06, 10))), Time=10, r=.01, sigma=0.6, dt=1, imm = TRUE, MC_loops = 1000)
 }
