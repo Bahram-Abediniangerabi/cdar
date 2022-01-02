@@ -125,7 +125,7 @@ EUAC_MC=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = NA, recu
 #' @title Real Options Pricing using Binomial Lattice
 #' @description This R function will provide real option prices for underlying assets (Infrastructure Projects, Buildings, etc) using binomial lattice.
 #' @param S State Variable
-#' @param I Investment
+#' @param I Investment (vector): Ex: I = cumprod(c(30, rep(1+0.06, n)))
 #' @param dt Time Intervals within a Year
 #' @param r Rate of Return
 #' @param sigma Fluctuations in the Price of State Variable
@@ -133,7 +133,7 @@ EUAC_MC=function(comp1 = NA, comp2 = NA,comp3 = NA, comp4 = NA, comp5 = NA, recu
 #' @param k Risk-Adjusted Growth Factor
 #' @param imm Cashflows are collected immediately after investemnt in the same yesr if it is TRUE, otherwise collect cashflows after one year (default is TRUE)
 #' @return Returns a binomial tree for the state variable "S", cashflow matrix calculated from the binomial tree and the investment cost, decision matrix for investment for different situations through the investment horizon, and a binomial tree plot.
-#' @examples BinomialTree(S=50, I=30, Time=5, r=0.07, sigma=0.15, dt=1, k =1.02, imm=TRUE)
+#' @examples BinomialTree(S=50, I=cumprod(c(30, rep(1+0.06, 5))), Time=5, r=0.07, sigma=0.15, dt=1, k =1.02, imm=TRUE)
 #' @export
 BinomialTree <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE)
 {
@@ -189,7 +189,7 @@ BinomialTree <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE)
     Cashflow=matrix(0, nrow = n+1, ncol = n+1)
     for(i in n:1){
       for(j in n:1){
-        Cashflow[i,j]=-I+Tree[i,j]+((p*Cashflow[i,j+1])+((1-p)*Cashflow[i+1,j+1]))/(1+r)
+        Cashflow[i,j]=-I[i]+Tree[i,j]+((p*Cashflow[i,j+1])+((1-p)*Cashflow[i+1,j+1]))/(1+r)
       }}
     # Triangle(Cashflow)
     for(i in 0:n+1){
@@ -207,7 +207,7 @@ BinomialTree <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE)
     Option_Value=matrix(0, nrow = n+1, ncol = n+1)
     for(i in n:1){
       for(j in n:1){
-        Option_Value[i,j]=max(-I+Tree[i,j]+((p*Cashflow[i,j+1])+((1-p)*Cashflow[i+1,j+1]))/(1+r),((p*Option_Value[i,j+1])+((1-p)*Option_Value[i+1,j+1]))/(1+r))
+        Option_Value[i,j]=max(-I[i]+Tree[i,j]+((p*Cashflow[i,j+1])+((1-p)*Cashflow[i+1,j+1]))/(1+r),((p*Option_Value[i,j+1])+((1-p)*Option_Value[i+1,j+1]))/(1+r))
       }}
     # Triangle(Cashflow)
     for(i in 0:n+1){
@@ -224,7 +224,7 @@ BinomialTree <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE)
       Cashflow=matrix(0, nrow = n+1, ncol = n+1)
       for(i in n:1){
         for(j in n:1){
-          Cashflow[i,j]=-I+((p*Tree[i,j+1])+((1-p)*Tree[i+1,j+1]))/(1+r)
+          Cashflow[i,j]=-I[i]+((p*Tree[i,j+1])+((1-p)*Tree[i+1,j+1]))/(1+r)
         }}
       # Triangle(Cashflow)
       for(i in 0:n+1){
@@ -297,7 +297,7 @@ BinomialTree <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE)
 #' @title Binomial Real Options Pricing with Monte Carlo Simulation
 #' @description This R function will provide real option prices and the probability of investment within the investment horizon using binomial lattice and monte carlo simulations.
 #' @param S State Variable
-#' @param I Investment
+#' @param I Investment vector: Ex:cumprod(c(30, rep(1+0.06, n)))
 #' @param dt Time Intervals within a Year
 #' @param r Rate of Return
 #' @param sigma Fluctuations in the Price of State Variable
@@ -306,7 +306,7 @@ BinomialTree <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE)
 #' @param imm Cashflows are collected immediately after investemnt in the same yesr if it is TRUE, otherwise collect cashflows after one year (default is TRUE)
 #' @param MC_loops Number of Monte Carlo Simulations
 #' @return Returns a binomial tree for the state variable "S", cashflow matrix calculated from the binomial tree and the investment cost, decision matrix for investment for different situations through the investment horizon, a binomial tree plot, and the likelihood of implementation plot.
-#' @examples BinomialTree_MC(S=10, I=100, Time=10, r=.01, sigma=0.6, dt=1, imm = TRUE, MC_loops = 1000)
+#' @examples BinomialTree_MC(S=10, I=cumprod(c(30, rep(1+0.06, 10))), Time=10, r=.01, sigma=0.6, dt=1, imm = TRUE, MC_loops = 1000)
 #' @export
 BinomialTree_MC <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE, MC_loops)
   {
@@ -364,7 +364,7 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE, MC_loops
     Cashflow=matrix(0, nrow = n+1, ncol = n+1)
     for(i in n:1){
       for(j in n:1){
-        Cashflow[i,j]=-I+Tree[i,j]+((p*Cashflow[i,j+1])+((1-p)*Cashflow[i+1,j+1]))/(1+r)
+        Cashflow[i,j]=-I[i]+Tree[i,j]+((p*Cashflow[i,j+1])+((1-p)*Cashflow[i+1,j+1]))/(1+r)
       }}
     # Triangle(Cashflow)
     for(i in 0:n+1){
@@ -382,7 +382,7 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE, MC_loops
     Option_Value=matrix(0, nrow = n+1, ncol = n+1)
     for(i in n:1){
       for(j in n:1){
-        Option_Value[i,j]=max(-I+Tree[i,j]+((p*Cashflow[i,j+1])+((1-p)*Cashflow[i+1,j+1]))/(1+r),((p*Option_Value[i,j+1])+((1-p)*Option_Value[i+1,j+1]))/(1+r))
+        Option_Value[i,j]=max(-I[i]+Tree[i,j]+((p*Cashflow[i,j+1])+((1-p)*Cashflow[i+1,j+1]))/(1+r),((p*Option_Value[i,j+1])+((1-p)*Option_Value[i+1,j+1]))/(1+r))
       }}
     # Triangle(Cashflow)
     for(i in 0:n+1){
@@ -399,7 +399,7 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE, MC_loops
       Cashflow=matrix(0, nrow = n+1, ncol = n+1)
       for(i in n:1){
         for(j in n:1){
-          Cashflow[i,j]=-I+((p*Tree[i,j+1])+((1-p)*Tree[i+1,j+1]))/(1+r)
+          Cashflow[i,j]=-I[i]+((p*Tree[i,j+1])+((1-p)*Tree[i+1,j+1]))/(1+r)
         }}
       # Triangle(Cashflow)
       for(i in 0:n+1){
