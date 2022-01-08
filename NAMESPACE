@@ -14,11 +14,10 @@ export(ia)
 export(bc_ratio)
 importFrom("graphics", "axis", "hist", "lines", "par", "plot","points", "text")
 importFrom("stats", "density", "ecdf", "rbinom","median","uniroot","dnorm", "sd")
-importFrom("ggplot2", "aes", "geom_bar", "geom_text", "ggplot" , "position_dodge", "xlab","ylab", "geom_line")
+importFrom("ggplot2","ggplot" , "aes", "geom_bar", "geom_text", "position_dodge", "xlab","ylab", "geom_line")
 importFrom("graphics", "legend", "plot.new")
-importFrom("plyr",'ldply', "count")
+importFrom("plyr", "count",'ldply')
 importFrom("dplyr", "%>%","summarise_all","funs", "mutate","arrange")
 importFrom("tidyr", "spread", "gather", "separate")
 importFrom("forcats", "fct_relevel", "fct_recode")
-
 
