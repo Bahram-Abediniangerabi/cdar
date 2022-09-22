@@ -26,10 +26,8 @@ Imports:
   xts, 
   tidyr, 
   FinancialMath, 
-  FinCal, 
-  LICORS, 
   triangle, 
   histogram
-RoxygenNote: 7.1.1 
+RoxygenNote: 7.2.1
 Depends:
   R (>= 3.5.0) 

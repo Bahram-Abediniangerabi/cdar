@@ -2,7 +2,7 @@
 % Please edit documentation in R/cdar.R
 \name{euv}
 \alias{euv}
-\title{Equalnet Uniform Value or Annuity}
+\title{Equalent Uniform Value or Annuity}
 \usage{
 euv(
   pv = NA,
