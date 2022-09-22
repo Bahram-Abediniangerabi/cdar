@@ -306,7 +306,7 @@ BinomialTree <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE)
 #' @param imm Cashflows are collected immediately after investemnt in the same yesr if it is TRUE, otherwise collect cashflows after one year (default is TRUE)
 #' @param MC_loops Number of Monte Carlo Simulations
 #' @return Returns a binomial tree for the state variable "S", cashflow matrix calculated from the binomial tree and the investment cost, decision matrix for investment for different situations through the investment horizon, a binomial tree plot, and the likelihood of implementation plot.
-#' @examples BinomialTree_MC(S=10, I=cumprod(c(30, rep(1+0.06, 10))), Time=10, r=.01, sigma=0.6, dt=1, imm = TRUE, MC_loops = 1000)
+#' @examples BinomialTree_MC(S=50, I=cumprod(c(30, rep(1+0.06, 5))), Time=5, r=.07, sigma=0.15, dt=1, k=1.02, imm = FALSE, MC_loops = 1000)
 #' @export
 BinomialTree_MC <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE, MC_loops)
   {
@@ -456,7 +456,7 @@ BinomialTree_MC <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE, MC_loops
 
   Decision_Mat= matrix(0, 1, n-1)
   for (i in 0:MC_loops){
-    Sample_path = rbinom(n-1,1,0.5)
+    Sample_path = rbinom(n-1,1,p)
     Decision_Path = vector()
     x_position = 1
     y_position = 1
@@ -654,7 +654,7 @@ tvm=function(pv=NA,fv=NA,n=NA,r=NA,ic=1) {
   return(m.out)
 }
 
-#' @title Equalnet Uniform Value or Annuity
+#' @title Equalent Uniform Value or Annuity
 #' @description This R function calculate annuity for the present value, future value, number of payments/periods, amount of the first payment, the payment increment amount per period, and/or the interest rate for an arithmetically growing annuity.
 #' @param pv present value
 #' @param fv future value
