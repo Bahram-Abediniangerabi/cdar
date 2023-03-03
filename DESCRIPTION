@@ -10,7 +10,6 @@ Encoding: UTF-8
 LazyData: true
 Imports: 
   forcats,
-  plyr, 
   dplyr,
   keras, 
   tseries, 
@@ -18,7 +17,6 @@ Imports:
   lmtest, 
   urca, 
   tsDyn,   
-  ggplot2, 
   forecast, 
   astsa, 
   quantmod, 
@@ -30,4 +28,4 @@ Imports:
   histogram
 RoxygenNote: 7.2.3
 Depends:
-  R (>= 3.5.0)
+  R (>= 3.5.0), ggplot2, plyr
