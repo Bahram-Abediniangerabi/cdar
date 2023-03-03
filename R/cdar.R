@@ -311,6 +311,8 @@ BinomialTree <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE)
 BinomialTree_MC <- function(S, I, Time, r, sigma, dt, k = NA, imm=TRUE, MC_loops)
   {
   options(warn=-1)
+  library(plyr)
+  library(ggplot2)
   V1 <- NULL
   # Parameters:
   n = (Time / dt)+1
