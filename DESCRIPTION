@@ -30,4 +30,4 @@ Imports:
   histogram
 RoxygenNote: 7.2.3
 Depends:
-  R (>= 3.5.0), plyr, ggplot2
+  R (>= 3.5.0)
